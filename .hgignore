@@ -1,0 +1,11 @@
+syntax: glob
+src/appengine_django.zip
+django.zip
+src/.google_appengine
+src/appengine_django
+src/test_extensions
+src/tea
+.pydevproject
+.project
+.settings
+*.pyc

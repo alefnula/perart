@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+		<script>
+			if(parent && 'upload_response' in parent) {
+				parent.upload_response({
+					'status': '{{ status }}',
+					'key': '{{ key }}',
+					'thumbnail': '{{ thumbnail }}'
+				});
+			}
+		</script>
+	</head>
+	<body>
+	</body>
+</html>

@@ -1,0 +1,33 @@
+application: perart-org
+version: 2-1
+runtime: python
+api_version: 1
+
+handlers:
+
+- url: /favicon.ico
+  static_files: static/images/favicon.ico
+  upload: static/images/favicon.ico
+
+- url: /robots.txt
+  static_files: static/robots.txt
+  upload: static/robots.txt
+
+- url: /remote_api
+  script: $PYTHON_LIB/google/appengine/ext/remote_api/handler.py
+  login: admin
+
+- url: /static
+  static_dir: static
+
+- url: /webadmin/.*
+  script: $PYTHON_LIB/google/appengine/ext/admin
+  login: admin
+
+- url: /.*
+  script: main.py
+
+
+skip_files:
+- ^(.*/)?.*\.py[co]
+- backup

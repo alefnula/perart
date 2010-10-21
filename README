@@ -1,0 +1,40 @@
+.. -*- restructuredtext -*-
+
+
+TeacupCMS
+=========
+
+TeacupCMS is a lightweight CMS designed to run on Google App Engine.
+
+
+Installing
+==========
+
+To run TeacupCMS you need:
+
+  * Google App Engine SDK for Python (http://code.google.com/appengine/)
+  * Django (http://www.djangoproject.com)
+  * google-app-engine-django (http://code.google.com/p/google-app-engine-django/)
+  * django-test-extensions (http://github.com/garethr/django-test-extensions)
+  * TinyMCE (http://tinymce.moxiecode.com)
+  * JQuery and JQueryUI (http://jquery.com, http://jqueryui.com)
+
+
+#. First install the Google App Engine SDK for Python.
+#. Download and extract TeacupCMS.
+#. Create `django.zip` from `django` package and place it in the `src` folder.
+#. Place the `appengine_django` and `test_extensions` packages in the `src` folder.
+#. Create a symbolic link to App Engine SDK in the `src` package::
+
+    cd teacupcms/src
+    ln -s ${PATH_TO_GOOGLE_APPENGINE_SDK} .google_appengine
+
+#. Place the `tiny_mce`, `jquery.js` and `jquery-ui.js` in the `src/static/js` folder.
+#. Run `python manage.py runserver` and go to `http://localhost:8000/admin/`
+
+
+
+Contributing
+============
+
+Send wishes, comments, patches, etc. to alefnula@gmail.com.

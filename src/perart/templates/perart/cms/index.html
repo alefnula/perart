@@ -1,0 +1,75 @@
+{% extends "perart/cms.html" %}
+
+{% block extrascripts %}
+<script type="text/javascript" src="/static/js/jquery.marquee.js"></script>
+
+<script type="text/javascript">
+<!--
+$(function () {    
+    $('marquee').marquee().mouseover(function () {
+        $(this).trigger('stop');
+    }).mouseout(function () {
+        $(this).trigger('start');
+    }).mousemove(function (event) {
+        if ($(this).data('drag') == true) {
+            this.scrollTop = $(this).data('scrollY') + ($(this).data('y') - event.clientY);
+        }
+    }).mousedown(function (event) {
+        $(this).data('drag', true).data('y', event.clientY).data('scrollY', this.scrollTop);
+    }).mouseup(function () {
+        $(this).data('drag', false);
+    });
+});
+//-->
+</script>
+
+{% endblock %}
+
+{% block menu %}
+<ul class="sf-menu">
+{% autoescape off %}{{ menu.spitout }}{% endautoescape %}
+</ul>
+{% endblock %}
+
+{% block content %}
+<div id="emptybox5">
+  <p><strong>Per.Art</strong> je organizacija koja deluje u oblasti savremenih izvođačkih umetnosti.</p>
+  <p>Grupa okupljena oko organizacije <strong>Per.Art</strong>, od 1999. godine, u saradnji sa raznim
+  drugim organizacijama realizuje projekte u Srbiji i inostranstvu, a 2005. registruje se kao udruženje
+  građana u Novom Sadu.</p>
+  <p id="pcont"><strong>Per.Art</strong> svoje aktivnosti sprovodi kroz sledeće programe:</p>
+</div>
+
+<div id="programs">
+  {% for program in programs %}
+  <div class="program">
+    <a href="{% url perart.program program.url %}">
+      <img style="border: 0;" title="{{ program.title }}"
+           src="{% url perart.blob "program" "frontpage_image" program.key %}"
+           border="0" alt="{{ program.title }}" width="165" height="70" />
+    </a>
+    <p><a href="{% url perart.program program.url %}">{{ program.title }}</a></p>
+    <p>{{ program.subtitle }}</p>
+  </div>
+  {% endfor %}
+  
+  <div id="program">
+    <object width="165" height="70" title="vesti">
+      <param name="movie" value="/static/images/vesti_slide.swf"/>
+      <param name="quality" value="high"/>
+      <embed src="/static/images/vesti_slide.swf" quality="high" pluginspage="http://www.adobe.com/shockwave/download/download.cgi?P1_Prod_Version=ShockwaveFlash" type="application/x-shockwave-flash" width="165" height="70"></embed>
+    </object>
+    <p><a href="{% url perart.news %}">Novosti</a></p>
+    
+    <marquee class="news" behavior="scroll" direction="up" scrollamount="1">
+      {% for n in news %}
+      <div class="news-item">
+        <div class="news-dat">{{ n.date }}</div>
+        <div class="news-cont"><p>{{ n.title }}</p></div>
+        <div class="news-link"><a href="{% url perart.news n.url %}">...opširnije</a></div>
+      </div>
+      {% endfor %}
+    </marquee>
+  </div>  
+</div>
+{% endblock %}

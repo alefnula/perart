@@ -1,0 +1,32 @@
+{% extends "perart/cms.html" %}
+{% load perart_tags %}
+
+
+{% block menu %}
+<ul class="sf-menu">
+  <li><a href="{% url perart.program program.url %}">o programu</a></li>
+  {% autoescape off %}{{ program.get_menu.spitout }}{% endautoescape %}
+  <li><a href="mailto:perart.office@gmail.com">kontakt</a></li>
+</ul>
+{% endblock %}
+
+
+{% block content %}
+<div id="emptybox">&nbsp;
+  {% if object.gallery %}
+    {% render_gallery object.gallery %}
+  {% endif %}
+
+  {% if object.page_image %}
+  <img src="{% url perart.blob "program" "page_image" object.key %}" style="margin-top: 200px; max-width: 311px;"/>
+  {% endif %}
+</div>
+
+<div id="emptybox3">&nbsp;</div>
+
+<div id="emptybox2">
+  <div id="maintxt">
+  {% autoescape off %}{{ object.text }}{% endautoescape %}
+  </div>
+</div>
+{% endblock %}

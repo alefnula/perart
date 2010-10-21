@@ -1,0 +1,33 @@
+{% extends "perart/admin.html" %}
+
+{% block admin_content %}
+
+{% if removed %}
+<p id="removed">Program deleted</p>
+{% endif %}
+
+<p><a href="{% url perart.admin_program_edit %}">Add new program</a><br/></p>
+
+<table class="formatted" cellspacing="0" cellpadding="0">
+  <thead>
+    <tr>
+      <td width="350">Title</td>
+      <td width="120">Edit Menu</td>
+      <td width="120">Edit</td>
+      <td width="120">Delete</td>
+    </tr>
+  </thead>
+  <tbody>
+  {% for program in object_list %}
+    <tr id="row_{{ program.key }}">
+      <td>{{ program.title }}</td>
+      <td><a href="{% url perart.admin_program_menu_edit program.key %}">Edit Menu</a></td>
+      <td><a href="{% url perart.admin_program_edit program.key %}">Edit</a></td>
+      <td><a href="{% url perart.admin_program_remove program.key %}"
+             onclick="return confirm('Are you sure? This action cannot be undone!')">Delete</a></td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+
+{% endblock %}

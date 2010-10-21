@@ -1,0 +1,31 @@
+{% extends "perart/cms.html" %}
+
+{% block menu %}
+<ul class="sf-menu">
+  <li><a href="{% url perart.index %}">početna</a></li>
+  {% for program in programs %}
+  <li><a href="{% url perart.program program.url %}">{{ program.title }}</a></li>
+  {% endfor %}
+  <li><a href="mailto:perart.office@gmail.com">kontakt</a></li>
+</ul>
+{% endblock %}
+
+
+{% block content %}
+<div id="emptybox">&nbsp;
+  <div id="all-news">
+    {% for n in news %}
+    <a href="{% url perart.news n.url %}">{{ n.title }}</a>
+    {% endfor %}
+  </div>
+</div>
+
+<div id="emptybox3">&nbsp;</div>
+
+<div id="emptybox2">
+  <div id="maintxt">
+    <p><strong>{{ object.title }}</strong></p><br/>
+    {% autoescape off %}{{ object.text }}{% endautoescape %}
+  </div>
+</div>
+{% endblock %}

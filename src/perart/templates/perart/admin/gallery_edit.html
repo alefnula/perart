@@ -1,0 +1,151 @@
+{% extends "perart/admin.html" %}
+{% load tea %}
+
+{% block extrajs %}
+<script type="text/javascript">
+function swap_tab(active) {
+	if (active == 'upload') {
+		$('#upload_tab').addClass('selected_tab');
+		$('#images_tab').removeClass('selected_tab');
+		$('#upload_div').show();
+		$('#images_div').hide();
+	} else {
+		$('#upload_tab').removeClass('selected_tab');
+		$('#images_tab').addClass('selected_tab');
+		$('#upload_div').hide();
+		$('#images_div').show();	
+	}
+}
+
+
+
+function insert_to_media(data, position) {
+	var elm = $('<div class="medialist_file"></div>');
+	elm.css({'background-image': 'url(' + data.thumbnail + ')'});
+	// Menu overlay, for inserting the image/file to the page or deleting it from the media library
+	var overlay           = $('<div class="medialist_file_overlay" style="display: none"/>');
+	var button_background = $('<div class="medialist_file_background"/>');	
+	var button_delete     = $('<div class="medialist_file_button">Remove file</div>');
+	
+	button_delete.bind('mouseover', function(){
+		button_delete.addClass('medialist_file_button_mouseover');
+	});
+
+	button_delete.bind('mouseout', function(){
+		button_delete.removeClass('medialist_file_button_mouseover');
+	});
+
+	var hide_overlay = false;
+
+	button_delete.bind('click', function() {
+		if(confirm('Are you sure?\nThis action cannot be undone!')) {
+			elm.fadeOut('slow');
+			$.post('{% url perart.admin_gallery_remove_image %}', {key: encodeURIComponent(data.key)});
+		}
+	});
+	
+	overlay.append(button_background)
+	overlay.append(button_delete)
+	
+	elm.prepend(overlay);
+
+	elm.bind('mouseover', function() {
+		elm.addClass('medialist_file_selected');
+		if (!hide_overlay) {
+			overlay.show();
+		}
+	});
+	elm.bind('mouseout', function() {
+		elm.removeClass('medialist_file_selected');
+		overlay.hide();
+	});
+	return elm;
+}
+
+function upload_response(data){
+	$('#upload_submit').attr('disabled', false);
+	$('#upload_wait').hide();
+	$('#file').replaceWith('<input type="file" name="file" id="file"/>');
+	if (data.status != 'OK') {
+		$('#upload_messages').show()
+		var msg = $('<div class="error_msg" style="display:none">There was an error with uploading the file. Check if the file is under 1 MB.</div>');
+		$('#upload_messages').append(msg);
+		msg.fadeIn('slow');
+		window.setTimeout(function() {
+			msg.fadeOut('slow')
+		}, 20*1000)
+	} else {
+		var elm = insert_to_media(data);
+		$('#medialist_files').prepend(elm);
+		swap_tab('manager');
+		elm.animate({backgroundColor:'#FF7400'}, 'slow').animate({backgroundColor: '#FAFAFA'}, 'slow');
+	}
+}
+
+var images = {% autoescape off %}{{ images }}{% endautoescape %};
+
+$(function() {
+	// Handle media manager tabs	 
+	$('#upload_tab').bind('click', function() { swap_tab('upload'); });
+	$('#images_tab').bind('click', function() { swap_tab('images'); });
+	
+	$('#upload_submit').attr('disabled', false);
+	
+	if (images) {
+		for(var i=0; i < images.length; i++) {
+			try {
+				var elm = insert_to_media(images[i]);
+				$('#medialist_files').append(elm);
+			} catch(E) {}
+		}
+	}
+})
+</script>
+{% endblock %}
+
+{% block admin_content %}
+<form method="post" enctype="multipart/form-data" action="{% if object %}{{ object.get_object_edit_url }}{% else %}{{ model.get_model_edit_url }}{% endif %}">
+{% tea_form form _("Save") %}
+</form>
+
+{% if object != None %}
+<h2>Images</h2>
+
+{% spaceless %}
+<div class="tabs">
+  <div class="tab selected_tab" id="upload_tab">Upload</div>
+  <div class="tab" id="images_tab">Images</div>
+  <div style="clear: both; overflow:hidden;"></div>
+</div>
+
+<div id="upload_div" class="mediaupload">
+  <form method="post" style="margin:0;padding:0;" enctype="multipart/form-data"
+        action="{% url perart.admin_gallery_upload_image object.key %}" target="upload_target"
+        onsubmit="$('#upload_wait').show(); $('#upload_submit').attr('disabled', true);">
+    <table style="width: 100%"><tbody>
+	  <tr>
+	    <td><label for="file" width="120">Select file</label></td>
+	    <td><input type="file" name="file" id="file" /></td>
+	  </tr>
+      <tr><td colspan="2"><span class="stay_low">Max. file size 1 MB.</span></td></tr>
+      <tr id="upload_messages"><td colspan="2"></td></tr>
+      <tr>
+        <td colspan="2">
+          <input type="submit" id="upload_submit" name="ok" value="Upload file" />
+          <img id="upload_wait" style="display: none" src="/static/images/wait.gif" />
+        </td>
+      </tr>
+	</tbody></table>
+  </form>
+  <iframe style="display:none" id="upload_target" name="upload_target"></iframe>
+</div>
+
+<div id="images_div" class="medialist" style="display: none">
+  <div id="medialist_files" class="medialist_files"></div>
+  <div style="clear:both"></div>
+</div>
+{% endspaceless %}
+
+{% endif %}
+
+{% endblock %}

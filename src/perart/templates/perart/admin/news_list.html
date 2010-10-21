@@ -1,0 +1,33 @@
+{% extends "perart/admin.html" %}
+
+{% block admin_content %}
+
+{% if removed %}
+<p id="removed">News deleted</p>
+{% endif %}
+
+<p><a href="{% url perart.admin_news_edit %}">Add new news</a><br/></p>
+
+<table class="formatted" cellspacing="0" cellpadding="0">
+  <thead>
+    <tr>
+      <td width="350">Title</td>
+      <td width="120">Published</td>
+      <td width="120">Edit</td>
+      <td width="120">Delete</td>
+    </tr>
+  </thead>
+  <tbody>
+  {% for nws in object_list %}
+    <tr id="row_{{ nws.key }}">
+      <td>{{ nws.title|escape }}</td>
+      <td>{{ nws.published }}</td>
+      <td><a href="{% url perart.admin_news_edit nws.key %}">Edit</a></td>
+      <td><a href="{% url perart.admin_news_remove nws.key %}"
+             onclick="return confirm('Are you sure? This action cannot be undone!')">Delete</a></td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+
+{% endblock %}

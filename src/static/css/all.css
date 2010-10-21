@@ -1,0 +1,319 @@
+
+
+
+#group4 
+{
+    position:relative;
+    float:left;
+    clear:both;
+    width:875px;
+    height:19px;
+    background-color:transparent;
+}
+
+#jezik
+{
+    height: 19px;
+	float: right;
+	font-weight: bold;
+	color: #b4b4b4;
+}
+#jezik a:link, a:visited, a:active {
+	color: #b4b4b4;
+	text-decoration: none;
+}
+#jezik a:hover {
+	color: #ff9a00;
+	text-decoration: none;
+}
+
+
+#sples .bspc 
+{
+    padding-bottom:0;
+}
+#uminkl 
+{
+    position:relative;
+    float:left;
+    width:175px;
+    background-color:#FFFFFF;
+    background-image: url(../images/sp3.gif);
+	background-repeat: no-repeat;
+	background-position: right top;
+}
+#uminkl .bspc 
+{
+    padding-bottom:0;
+}
+#gradscena 
+{
+    position:relative;
+    float:left;
+    width:175px;
+    background-color:#FFFFFF;
+    background-image: url(../images/sp3.gif);
+	background-repeat: no-repeat;
+	background-position: right top;
+}
+#gradscena .bspc 
+{
+    padding-bottom:0;
+}
+#arc 
+{
+	position:relative;
+	float:left;
+	width:175px;
+	background-color:#FFFFFF;
+	background-image: url(../images/sp4.gif);
+	background-repeat: no-repeat;
+	background-position: right top;
+	height: 270px;
+}
+#arc .bspc 
+{
+    padding-bottom:0;
+}
+#vesti 
+{
+    position:relative;
+    float:left;
+    width:175px;
+    background-color:#FFFFFF;
+}
+#vesti .bspc 
+{
+    padding-bottom:0;
+}
+#vestimainbox {
+	width: 875px;
+	height: auto;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	color: #737373;
+	font-size: 11px;
+}
+#vestimainbox a:link, a:visited, a:active {
+	text-decoration: none;
+	color: #737373;
+	font-weight: normal;
+}
+#vestimainbox a:hover {
+	text-decoration: none;
+	color: #ff9a00;
+	font-weight: normal;
+}
+.vesti
+{
+	padding-top: 10px;
+	padding-bottom: 8px;
+}
+#novosti {
+	text-align: justify;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	line-height: 130%;
+	padding-left: 15px;
+	font-size: 11px;
+	color: #737373;
+}
+#novosti p {
+	padding-bottom: 8px;
+}
+#novosti a:link, a:visited, a:active {
+	text-decoration: none;
+	color: #737373;
+	font-weight: bold;
+}
+#novosti a:hover {
+	text-decoration: none;
+	color: #ff9a00;
+	font-weight: bold;
+}
+.novostidate {
+	color: #ff9a00;
+}
+
+#content {
+	width: 875px;
+	height: auto;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	color: #737373;
+}
+#content a:link, a:visited, a:active {
+	text-decoration: none;
+	font-weight: bold;
+	color: #737373;
+}
+#content a:hover {
+	text-decoration: none;
+	font-weight: bold;
+	color: #ff9a00;
+}
+
+
+#group 
+{
+    position:relative;
+    float:left;
+    clear:both;
+    width:875px;
+    background-color:transparent;
+}
+
+
+
+#emptybox5 p
+{
+	padding-bottom: 8px;
+}
+
+#group2 
+{
+    position:relative;
+    float:left;
+    width:316px;
+    height:400px;
+    background-color:transparent;
+    font-size:10px;
+}
+#emptybox 
+{
+    position:relative;
+    float:left;
+    width:316px;
+    background-color:#FFFFFF;
+}
+#emptybox .lr 
+{
+    position:relative;
+    float:left;
+    background: url("../images/dott1.gif") 100% 0 repeat-y;
+    width:100%;
+}
+#imgonama 
+{
+	margin-top: 277px;
+}
+#emptybox4 
+{
+    position:relative;
+    float:left;
+    clear:both;
+    width:316px;
+    background-color:#FFFFFF;
+    font-size:10px;
+}
+#emptybox4 .lr 
+{
+    position:relative;
+    float:left;
+    background: url("../images/dott1.gif") 100% 0 repeat-y;
+    width:100%;
+}
+#projektgal {
+	margin-bottom: 8px;
+	height: auto;
+	width: 311px;
+}
+#projektgaltumb {
+	height: 190px;
+	width: 311px;	
+}
+#projektgaltumb p {
+	float: left;
+	height: 31px;
+	width: 74px;
+	margin-left: 3px;
+	margin-bottom: 3px;
+}
+#projektgaltumb p img {
+	border: 1px solid #737373;
+}
+#emptybox3 
+{
+	position:relative;
+	float:left;
+	width:17px;
+	background-color:#FFFFFF;
+	height: 44px;
+}
+#maintxt 
+{
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color: #737373;
+	text-align: justify;
+	line-height: 130%;
+}
+#maintxt p {
+	padding-bottom: 8px;
+}
+#maintxt ul, li {
+	list-style-image: url(../sr/umetnost_inkluzija/images/bul_ment.gif);
+	margin-left: 40px;
+	padding-bottom: 5px;
+}
+#asterix {
+	margin-top: 10px;
+	margin-bottom: 10px;
+	margin-right: 20px;
+	margin-left: 40px;
+	font-size: 10px;
+	font-style: italic;
+	background-color: #f6f6f6;
+}
+.asterix {
+	font-weight: bold;
+	color: #CC0000;
+}
+#koncept {
+	margin-top: 10px;
+	margin-bottom: 10px;
+	margin-right: 20px;
+	margin-left: 40px;
+	font-size: 10px;
+	font-style: italic;
+	background-color: #f6f6f6;
+}
+#downicon {
+	margin-bottom: 7px;
+	margin-left: 25px;
+	font-size: 82%;
+}
+#downicon a:link, a:visited, a:active {
+	text-decoration: none;
+	font-weight: bold;
+	color: #737373;
+}
+#downicon a:hover {
+	text-decoration: none;
+	font-weight: bold;
+	color: #ff9a00;
+}
+#galerija {
+	text-align: center;
+	height: 430px;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color: #737373;
+}
+#galerija img {
+	padding-bottom: 8px;	
+}
+
+#emptybox2 .bspc 
+{
+    padding-bottom:20px;
+}
+
+#under {
+	height: 70px;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 15px;
+	color: #737373;
+	text-align: center;
+}
+#under p {
+	padding-bottom: 10px;	
+}
+

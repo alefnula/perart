@@ -1,0 +1,13 @@
+<div id="gallery">
+  <div style=" display: block;">
+  <img id="gallery-image" src="{{ images.0.url }}" style="max-width: 311px;" />
+  </div><br/>
+  {% if count > 1 %}
+    {% for image in images %}
+    <div style="float: right; display: block;">
+      <img src="{{ image.thumbnail_url }}" style="padding: 1px; cursor: pointer;"
+           onclick="$('#gallery-image').attr('src', '{{ image.url }}');"/>
+    </div>
+    {% endfor %}
+  {% endif %}
+</div>

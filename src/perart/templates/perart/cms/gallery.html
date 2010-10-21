@@ -1,0 +1,31 @@
+{% extends "perart/cms.html" %}
+
+{% block menu %}
+<ul class="sf-menu">
+  <li><a href="{% url perart.program program.url %}">o programu</a></li>
+  {% autoescape off %}{{ program.get_menu.spitout }}{% endautoescape %}
+  <li><a href="mailto:perart.office@gmail.com">kontakt</a></li>
+</ul>
+{% endblock %}
+
+
+{% block content %}
+<div id="emptybox">&nbsp;
+  {% for image in object.image_set %}
+  <div style="float: right; display: block;">
+    <img src="{{ image.thumbnail_url }}" style="padding: 1px; cursor: pointer;"
+         onclick="$('#gallery-image').attr('src', '{{ image.url }}');"/>
+  </div>
+  {% endfor %}
+</div>
+
+<div id="emptybox3">&nbsp;</div>
+<div id="emptybox2">
+  <div id="maintxt">
+    <div style=" display: block; width: 100%; text-align: center;">
+      <img id="gallery-image" src="{{ object.image_set.0.url }}" style="" />
+      <p id="gallery-title" style="margin: 1em;"><b>{{ object.title|upper }}</b></p>
+    </div>
+  </div>
+</div>
+{% endblock %}

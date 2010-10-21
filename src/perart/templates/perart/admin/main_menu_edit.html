@@ -1,0 +1,18 @@
+{% extends "perart/admin.html" %}
+
+{% block admin_content %}
+
+<h2>Main Menu Editing</h2>
+
+<form method="post" enctype="multipart/form-data" action="{% url perart.admin_settings_main_menu_edit %}">
+  <div class="tea-form">
+    {% if saved %}<h3 id="row_1">Main Menu successfully saved</h3>{% endif %}
+    {% if error %}<ul class="errorlist"><li>{{ error }}</li></ul>{% endif %}
+	<textarea name="menu" rows="30" style="width: 98%";>{{ menu }}</textarea>
+	<div class="submit-row">
+      <input class="default" type="submit" value="Save"/>
+    </div>
+  </div>
+</form>
+
+{% endblock %}

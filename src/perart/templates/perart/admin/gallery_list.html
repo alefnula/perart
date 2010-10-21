@@ -1,0 +1,31 @@
+{% extends "perart/admin.html" %}
+
+{% block admin_content %}
+
+{% if removed %}
+<p id="removed">Gallery deleted</p>
+{% endif %}
+
+<p><a href="{% url perart.admin_gallery_edit %}">Add new gallery</a><br/></p>
+
+<table class="formatted" cellspacing="0" cellpadding="0">
+  <thead>
+    <tr>
+      <td width="350">Title</td>
+      <td width="120">Edit</td>
+      <td width="120">Delete</td>
+    </tr>
+  </thead>
+  <tbody>
+  {% for gallery in object_list %}
+    <tr id="row_{{ gallery.key }}">
+      <td>{{ gallery.title|escape }}</td>
+      <td><a href="{% url perart.admin_gallery_edit gallery.key %}">Edit</a></td>
+      <td><a href="{% url perart.admin_gallery_remove gallery.key %}"
+             onclick="return confirm('Are you sure? This action cannot be undone!')">Delete</a></td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+
+{% endblock %}
