@@ -172,7 +172,7 @@ class News(PerartModelWithTitleAndUrl):
     title     = db.StringProperty(required=True)
     url       = db.StringProperty()
     text      = db.TextProperty()
-    published = db.DateProperty(auto_now=True)
+    published = db.DateProperty()
 
     def date(self):
         return '%s %s.' % (

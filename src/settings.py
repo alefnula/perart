@@ -111,10 +111,10 @@ INSTALLED_APPS = (
 TINY_MCE_SETTINGS =  '''
 script_url: '/static/js/tiny_mce/tiny_mce.js',
 theme: 'advanced',
-plugins: 'advimage,tabfocus,inlinepopups,preview',
+plugins: 'advimage,tabfocus,inlinepopups,preview,media',
 
 theme_advanced_buttons1: 'undo,redo,|,bold,italic,underline,strikethrough,|,image,|,justifyleft,justifycenter,justifyright,justifyfull,|,bullist,numlist,|,outdent,indent,blockquote,link,hr,|,forecolor,backcolor,|,code,preview,',
-theme_advanced_buttons2: 'formatselect,fontselect,fontsizeselect',
+theme_advanced_buttons2: 'formatselect,fontselect,fontsizeselect,media',
 theme_advanced_buttons3: null,
 theme_advanced_buttons4: null,
   
@@ -125,4 +125,6 @@ theme_advanced_resizing: true,
 relative_urls: false,
 
 content_css : '/static/css/tiny_mce.css',
+
+extended_valid_elements: "iframe[src|width|height|name|align]",
 '''

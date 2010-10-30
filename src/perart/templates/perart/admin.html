@@ -6,6 +6,7 @@
 <link href="/static/css/admin.css" type="text/css" rel="stylesheet"></link>
 <link href="/static/css/tea-form.css" type="text/css" rel="stylesheet"></link>
 <link href="/static/css/tiny_mce.css" type="text/css" rel="stylesheet"></link>
+<link href="/static/css/jquery-ui/jquery-ui-1.8.5.custom.css" type="text/css" rel="stylesheet"></link>
 {% endblock %}
 
 {% block extrajs %}
@@ -19,6 +20,7 @@ $(function() {
   // Notify the user with a red blink that a page was deleted
   $('#removed').animate({backgroundColor: '#FFFF00', color: '#FFFFFF'}, 'slow').
                 animate({backgroundColor: '#FFFFFF', color: '#111111'}, 'slow');
+  $('#id_published').datepicker();
 });
 </script>
 {% block extrascripts %}{% endblock %}

@@ -25,7 +25,7 @@ class ProjectForm(djangoforms.ModelForm):
 class NewsForm(djangoforms.ModelForm):
     class Meta:
         model = models.News
-        exclude = ['published', 'url']
+        exclude = ['url']
 
 
 class GalleryForm(djangoforms.ModelForm):

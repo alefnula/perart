@@ -50,7 +50,7 @@ body {
     float: left;
     width: 650px;
     display: inline;
-    text-align: center;
+    text-align: left;
 }
 
 #meni a:link, a:visited, a:active {
