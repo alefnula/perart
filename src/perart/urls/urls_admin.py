@@ -15,23 +15,31 @@ urlpatterns = patterns('perart.views',
     # Admin interface
     url(r'^$', admin_required(simple.redirect_to), {'url': 'projects/'}, name='perart.admin_main'),
     # List views
-    url(r'^programs/$', 'admin.object_list', {'queryset': models.Program.objects.all,
-                                              'template_name': 'perart/admin/program_list.html',
-                                              'extra_content': {'page': 'program'}}, name='perart.admin_program_list'),
-    url(r'^projects/$', 'admin.object_list', {'queryset': models.Project.objects.all,
-                                              'template_name': 'perart/admin/project_list.html',
-                                              'extra_content': {'page': 'project'}}, name='perart.admin_project_list'),
-    url(r'^news/$',     'admin.object_list', {'queryset': models.News.objects.all,
-                                              'template_name': 'perart/admin/news_list.html',
-                                              'extra_content': {'page': 'news'}}, name='perart.admin_news_list'),
-    url(r'^gallery/$',  'admin.object_list', {'queryset': models.Gallery.objects.all,
-                                              'template_name': 'perart/admin/gallery_list.html',
-                                              'extra_content': {'page': 'gallery'}}, name='perart.admin_gallery_list'),
+    url(r'^programs/$', 'admin.object_list', {
+            'queryset'      : models.Program.objects.all,
+            'template_name' : 'perart/admin/program_list.html',
+            'extra_content' : {'page': 'program'}
+    }, name='perart.admin_program_list'),
+    url(r'^projects/$', 'admin.object_list', {
+            'queryset'      : models.Project.objects.all,
+            'template_name' : 'perart/admin/project_list.html',
+            'extra_content' : {'page': 'project'}
+    }, name='perart.admin_project_list'),
+    url(r'^news/$',     'admin.object_list', {
+            'queryset'      : models.News.objects.all,
+            'template_name' : 'perart/admin/news_list.html',
+            'extra_content' : {'page': 'news'}
+    }, name='perart.admin_news_list'),
+    url(r'^gallery/$',  'admin.object_list', {
+            'queryset'      : models.Gallery.objects.all,
+            'template_name' : 'perart/admin/gallery_list.html',
+            'extra_content' : {'page': 'gallery'}
+    }, name='perart.admin_gallery_list'),
     
     # Edit views
-    url(r'^program-edit/(?:(?P<key>[\w-]+)/)?$', 'admin.object_with_image_edit',
-            {'model': models.Program, 'form': forms.ProgramForm, 'images': ['frontpage_image', 'page_image'],
-             'extra_content': {'page': 'program'}}, name='perart.admin_program_edit'),
+    url(r'^program-edit/(?:(?P<key>[\w-]+)/)?$', 'admin.object_edit',
+            {'model': models.Program, 'form': forms.ProgramForm, 'extra_content': {'page': 'program'}},
+            name='perart.admin_program_edit'),
     url(r'^project-edit/(?:(?P<key>[\w-]+)/)?$', 'admin.object_edit',
             {'model': models.Project, 'form': forms.ProjectForm, 'extra_content': {'page': 'project'}},
             name='perart.admin_project_edit'),

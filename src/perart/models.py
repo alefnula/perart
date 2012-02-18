@@ -46,12 +46,13 @@ class PerartModelWithTitleAndUrl(PerartModel):
 
     @classmethod
     def get_by_url(cls, url):
-        object = memcache.get('%s-%s' % (cls.name(), url)) #@UndefinedVariable
-        if object is None:
-            object = cls.gql('WHERE url = :1', url).get()
-            if object:
-                memcache.set('%s-%s' % (cls.name(), url), object) #@UndefinedVariable
-        return object
+        obj = memcache.get('%s-%s' % (cls.name(), url)) #@UndefinedVariable
+        if obj is None:
+            try:
+                obj = cls.objects.get(url=url)
+                memcache.set('%s-%s' % (cls.name(), url), obj) #@UndefinedVariable
+            except cls.DoesNotExist: pass
+        return obj
 
     @classmethod
     def get_unique_url(cls, url):
@@ -61,17 +62,16 @@ class PerartModelWithTitleAndUrl(PerartModel):
         '''
         url = unicode(slugify(url))
         nr = 0
-        object = cls.get_by_url(url)
-        while object:
+        obj = cls.get_by_url(url)
+        while obj:
             nr += 1
             url = '%s-%s' % (url, nr)
-            object = cls.get_by_url(url)
+            obj = cls.get_by_url(url)
         return url
 
-    def put(self):
+    def save(self, *args, **kwargs):
         if self.url is None:
             self.url = self.get_unique_url(self.title)
-        super(PerartModelWithTitleAndUrl, self).put()
         # Must be set after put, because the unputed is saved in memcache!!!
         memcache.set('%s-%s' % (self.__class__.name(), self.url), self) #@UndefinedVariable
 
@@ -81,7 +81,7 @@ class PerartModelWithTitleAndUrl(PerartModel):
 
 
 
-class Program(models.Model, PerartModelWithTitleAndUrl):
+class Program(PerartModelWithTitleAndUrl, models.Model):
     MENU_CACHE_KEY = 'program-menu'
     
     title           = models.CharField(max_length=511)
@@ -109,8 +109,9 @@ class Program(models.Model, PerartModelWithTitleAndUrl):
             memcache.set(self.menu_cache_key(), menu) #@UndefinedVariable
         return menu
 
-    def put(self):
-        super(Program, self).put()
+    def save(self, *args, **kwargs):
+        PerartModelWithTitleAndUrl.save(self)
+        models.Model.save(self, *args, **kwargs)
         memcache.delete(self.menu_cache_key()) #@UndefinedVariable
 
     def delete(self):
@@ -122,7 +123,7 @@ class Program(models.Model, PerartModelWithTitleAndUrl):
 
 
 
-class Gallery(models.Model, PerartModelWithTitleAndUrl):
+class Gallery(PerartModelWithTitleAndUrl, models.Model):
     program = models.ForeignKey(Program)
     title   = models.CharField(max_length=511)
     url     = models.CharField(max_length=511)
@@ -132,7 +133,7 @@ class Gallery(models.Model, PerartModelWithTitleAndUrl):
 
 
 
-class Image(models.Model, PerartModel):
+class Image(PerartModel, models.Model):
     gallery   = models.ForeignKey(Gallery)
     image     = BlobField(null=True, blank=True)
     thumbnail = BlobField(null=True, blank=True) 
@@ -159,7 +160,7 @@ class Image(models.Model, PerartModel):
 
 
 
-class Project(models.Model, PerartModelWithTitleAndUrl):
+class Project(PerartModelWithTitleAndUrl, models.Model):
     '''Page table holds page contents'''
     program = models.ForeignKey(Program)
     title   = models.CharField(max_length=511)
@@ -172,7 +173,7 @@ class Project(models.Model, PerartModelWithTitleAndUrl):
 
 
 
-class News(models.Model, PerartModelWithTitleAndUrl):
+class News(PerartModelWithTitleAndUrl, models.Model):
     title     = models.CharField(max_length=511)
     url       = models.CharField(max_length=511, null=True, blank=True)
     text      = models.TextField(null=True, blank=True)

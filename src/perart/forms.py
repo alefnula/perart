@@ -3,9 +3,11 @@ __contact__   = 'alefnula@gmail.com'
 __date__      = '20 April 2010'
 __copyright__ = 'Copyright (c) 2010 Viktor Kerkez'
 
-import models
+# django imports
 from django import forms
 
+# perart imports
+from perart import models
 
 class ProgramForm(forms.ModelForm):
     class Meta:

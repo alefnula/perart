@@ -36,21 +36,6 @@ def object_edit(request, model, form, template='perart/admin/object_edit.html', 
         f = form(request.POST, files=request.FILES, instance=obj)
         if f.is_valid():
             obj = f.save()
-            return HttpResponseRedirect(model.get_list_url() + ('?saved=%s' % str(obj.key())))
-    data = {} if extra_content is None else extra_content.copy()
-    data.update({'form': f, 'object': obj, 'model': model})
-    return render_to_response(template, data, context_instance=RequestContext(request))
-
-
-@admin_required
-def object_with_image_edit(request, model, form, images=None, template='perart/admin/object_edit.html', extra_content=None, key=None):
-    obj = model.objects.get(pk=key) if key is not None else None
-    if request.method == 'GET':
-        f = form(instance=obj)
-    if request.method == 'POST':
-        f = form(request.POST, files=request.FILES, instance=obj)
-        if f.is_valid():
-            obj = f.save()
             if hasattr(obj, 'create_thumbnail'):
                 obj.create_thumbnail()
                 obj.save()
