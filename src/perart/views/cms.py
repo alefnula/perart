@@ -18,9 +18,9 @@ from perart.models import Program, Project, News, Image, Menu, Gallery, Settings
 
 
 def index(request):
-    return render_to_response('perart/cms/index.html', {'programs': Program.all(),
+    return render_to_response('perart/cms/index.html', {'programs': Program.objects.all(),
                                                         'menu': Settings.get_main_menu(),
-                                                        'news': News.all().order('-published').fetch(15)},
+                                                        'news': News.objects.all().order_by('-published')[:15]},
                               context_instance=RequestContext(request))
 
 def render_blob(title, blob):
@@ -32,7 +32,7 @@ def render_blob(title, blob):
 def blob(request, model, field, key):
     model = model.lower()
     if model == 'program':
-        object = Program.get(key)
+        object = Program.objects.get(pk=key)
     else: raise Http404('Image not found!')
     if object: return render_blob(object.title, getattr(object, field))
     else: raise Http404('Image not found!')

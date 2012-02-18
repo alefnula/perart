@@ -1,5 +1,5 @@
 application: perart-org
-version: 2-2
+version: 3-0
 runtime: python
 api_version: 1
 
@@ -25,7 +25,7 @@ handlers:
   login: admin
 
 - url: /.*
-  script: main.py
+  script: djangoappengine/main/main.py
 
 
 skip_files:

@@ -4,31 +4,25 @@ __date__      = '24 January 2010'
 __copyright__ = 'Copyright (c) 2010 Viktor Kerkez'
 
 import os
+from djangoappengine.settings_base import *
 
 PROJECT_DIR  = os.path.abspath(os.path.dirname(__file__))
 STATIC_ROOT = os.path.join(PROJECT_DIR, 'static')
-
-if not 'SERVER_NAME' in os.environ:
-    os.environ['SERVER_NAME'] = 'localhost'
-if not 'SERVER_PORT' in os.environ:
-    os.environ['SERVER_PORT'] = '80'
-
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
-    # ('Your Name', 'your_email@domain.com'),
+    ('Viktor Kerkez', 'alefnula@gmail.com'),
 )
-
 MANAGERS = ADMINS
 
-DATABASE_ENGINE = 'appengine'  # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-DATABASE_NAME = ''             # Or path to database file if using sqlite3.
-DATABASE_USER = ''             # Not used with sqlite3.
-DATABASE_PASSWORD = ''         # Not used with sqlite3.
-DATABASE_HOST = ''             # Set to empty string for localhost. Not used with sqlite3.
-DATABASE_PORT = ''             # Set to empty string for default. Not used with sqlite3.
+
+
+# Activate django-dbindexer for the default database
+DATABASES['native'] = DATABASES['default']
+DATABASES['default'] = {'ENGINE': 'dbindexer', 'TARGET': 'native'}
+AUTOLOAD_SITECONF = 'indexes'
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -98,11 +92,15 @@ TEMPLATE_DIRS = (
 )
 
 INSTALLED_APPS = (
-    'appengine_django',
-    # Django Contrib apps
+#    'django.contrib.admin',
+    'django.contrib.contenttypes',
     'django.contrib.auth',
     'django.contrib.sessions',
-    # Apps
+    'djangotoolbox',
+    'autoload',
+    'dbindexer',
+    # djangoappengine should come last, so it can override a few manage.py commands
+    'djangoappengine',
     'tea.django',
     'perart',
 )

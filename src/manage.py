@@ -13,11 +13,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import sys
-sys.path.append('appengine_django.zip')
+#import sys
+#sys.path.append('appengine_django.zip')
 
-from appengine_django import InstallAppengineHelperForDjango
-InstallAppengineHelperForDjango()
+#from appengine_django import InstallAppengineHelperForDjango
+#InstallAppengineHelperForDjango()
 
 from django.core.management import execute_manager
 try:

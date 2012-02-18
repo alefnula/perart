@@ -10,17 +10,21 @@ import logging
 from google.appengine.ext import db
 from google.appengine.api import memcache, images
 
-from appengine_django.models import BaseModel
+from django.db import models
 
 from django.core.urlresolvers import reverse
 from django.template.defaultfilters import slugify
+from djangotoolbox.fields import BlobField
 
 # Constant for fetching all objects from db
 FETCH_ALL = 1000
 
 
 
-class PerartModel(BaseModel):
+class PerartModel(object):
+    def key(self):
+        return self.id
+    
     @classmethod
     def name(cls):
         return cls.__name__
@@ -77,16 +81,16 @@ class PerartModelWithTitleAndUrl(PerartModel):
 
 
 
-class Program(PerartModelWithTitleAndUrl):
+class Program(models.Model, PerartModelWithTitleAndUrl):
     MENU_CACHE_KEY = 'program-menu'
     
-    title           = db.StringProperty(required=True)
-    url             = db.StringProperty()
-    subtitle        = db.StringProperty(required=True)
-    text            = db.TextProperty(default='')
-    frontpage_image = db.BlobProperty()
-    page_image      = db.BlobProperty()
-    menu            = db.TextProperty(default='')
+    title           = models.CharField(max_length=511)
+    url             = models.CharField(max_length=511, null=True, blank=True)
+    subtitle        = models.CharField(max_length=511)
+    text            = models.TextField(default='')
+    frontpage_image = BlobField(null=True, blank=True)
+    page_image      = BlobField(null=True, blank=True)
+    menu            = models.TextField(default='')
 
     def menu_cache_key(self):
         return 'program-menu-%s' % self.url
@@ -111,27 +115,27 @@ class Program(PerartModelWithTitleAndUrl):
 
     def delete(self):
         memcache.delete(self.menu_cache_key()) #@UndefinedVariable
-        for project in self.project_set:
+        for project in Project.objects.filter(program=self):
             project.program = None
-            project.put()
+            project.save()
         super(Program, self).delete()        
 
 
 
-class Gallery(PerartModelWithTitleAndUrl):
-    program = db.ReferenceProperty(Program, required=True)
-    title   = db.StringProperty(required=True)
-    url     = db.StringProperty()
+class Gallery(models.Model, PerartModelWithTitleAndUrl):
+    program = models.ForeignKey(Program)
+    title   = models.CharField(max_length=511)
+    url     = models.CharField(max_length=511)
 
     def absolute_url(self):
         return reverse('perart.gallery', args=[self.program.url, self.url])
 
 
 
-class Image(PerartModel):
-    gallery   = db.ReferenceProperty(Gallery, required=True)
-    image     = db.BlobProperty()
-    thumbnail = db.BlobProperty() 
+class Image(models.Model, PerartModel):
+    gallery   = models.ForeignKey(Gallery)
+    image     = BlobField(null=True, blank=True)
+    thumbnail = BlobField(null=True, blank=True) 
 
     def create_thumbnail(self, width=74, height=31):
         img = images.Image(self.image)
@@ -155,24 +159,24 @@ class Image(PerartModel):
 
 
 
-class Project(PerartModelWithTitleAndUrl):
+class Project(models.Model, PerartModelWithTitleAndUrl):
     '''Page table holds page contents'''
-    program = db.ReferenceProperty(Program, required=True)
-    title   = db.StringProperty(required=True)
-    url     = db.StringProperty() # clean url title like 'about' for 'About' etc.
-    gallery = db.ReferenceProperty(Gallery)
-    text    = db.TextProperty()
+    program = models.ForeignKey(Program)
+    title   = models.CharField(max_length=511)
+    url     = models.CharField(max_length=511, null=True, blank=True) # clean url title like 'about' for 'About' etc.
+    gallery = models.ForeignKey(Gallery, null=True, blank=True)
+    text    = models.TextField(null=True, blank=True)
 
     def absolute_url(self):
         return reverse('perart.project', args=[self.program.url, self.url])
 
 
 
-class News(PerartModelWithTitleAndUrl):
-    title     = db.StringProperty(required=True)
-    url       = db.StringProperty()
-    text      = db.TextProperty()
-    published = db.DateProperty()
+class News(models.Model, PerartModelWithTitleAndUrl):
+    title     = models.CharField(max_length=511)
+    url       = models.CharField(max_length=511, null=True, blank=True)
+    text      = models.TextField(null=True, blank=True)
+    published = models.DateField(null=True, blank=True)
 
     def date(self):
         return '%s %s.' % (
@@ -283,18 +287,20 @@ class Menu(object):
 
 
 
-class Settings(BaseModel):
-    value = db.TextProperty(default='')
+class Settings(models.Model):
+    key   = models.CharField(max_length=255)
+    value = models.TextField(default='')
 
     @staticmethod
     def get_main_menu_object():
-        return Settings.get_or_insert(key_name='main-menu')
+        obj, _ = Settings.objects.get_or_create(key='main-menu')
+        return obj
 
     @staticmethod
     def set_main_menu(value):
         s = Settings.get_main_menu_object()
         s.value = value
-        s.put()
+        s.save()
         memcache.delete('setting-main-menu') #@UndefinedVariable
 
     @staticmethod

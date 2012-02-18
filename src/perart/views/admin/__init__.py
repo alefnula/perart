@@ -29,36 +29,32 @@ def object_list(request, queryset, template_name, extra_content=None):
 
 @admin_required
 def object_edit(request, model, form, template='perart/admin/object_edit.html', extra_content=None, key=None):
-    object = model.get(key) if key is not None else None
+    obj = model.objects.get(pk=key) if key is not None else None
     if request.method == 'GET':
-        f = form(instance=object)
+        f = form(instance=obj)
     if request.method == 'POST':
-        f = form(request.POST, files=request.FILES, instance=object)
+        f = form(request.POST, files=request.FILES, instance=obj)
         if f.is_valid():
-            object = f.save()
-            return HttpResponseRedirect(model.get_list_url() + ('?saved=%s' % str(object.key())))
+            obj = f.save()
+            return HttpResponseRedirect(model.get_list_url() + ('?saved=%s' % str(obj.key())))
     data = {} if extra_content is None else extra_content.copy()
-    data.update({'form': f, 'object': object, 'model': model})
+    data.update({'form': f, 'object': obj, 'model': model})
     return render_to_response(template, data, context_instance=RequestContext(request))
 
 
 @admin_required
 def object_with_image_edit(request, model, form, images=None, template='perart/admin/object_edit.html', extra_content=None, key=None):
-    object = model.get(key) if key is not None else None
+    obj = model.objects.get(pk=key) if key is not None else None
     if request.method == 'GET':
-        f = form(instance=object)
+        f = form(instance=obj)
     if request.method == 'POST':
-        f = form(request.POST, files=request.FILES, instance=object)
+        f = form(request.POST, files=request.FILES, instance=obj)
         if f.is_valid():
-            if images is not None:
-                for image in images:
-                    if f.cleaned_data['%sfield' % image] is not None:
-                        f.cleaned_data[image] = f.cleaned_data['%sfield' % image].read()
-            object = f.save()
-            if hasattr(object, 'create_thumbnail'):
-                object.create_thumbnail()
-                object.put()
-            return HttpResponseRedirect(model.get_list_url() + ('?saved=%s' % str(object.key())))
+            obj = f.save()
+            if hasattr(obj, 'create_thumbnail'):
+                obj.create_thumbnail()
+                obj.save()
+            return HttpResponseRedirect(model.get_list_url() + ('?saved=%s' % str(obj.key())))
     data = {} if extra_content is None else extra_content.copy()
     data.update({'form': f, 'object': object, 'model': model})
     return render_to_response(template, data, context_instance=RequestContext(request))
@@ -66,16 +62,16 @@ def object_with_image_edit(request, model, form, images=None, template='perart/a
 
 @admin_required
 def object_remove(request, model, key):
-    object = model.get(key)
-    if not object:
+    obj = model.objects.get(pk=key)
+    if not obj:
         raise Http404('%s not found' % model.__name__)
-    object.delete()
+    obj.delete()
     return HttpResponseRedirect(model.get_list_url() + '?removed=true')
 
 
 
 def program_menu_edit(request, key):
-    program = Program.get(key)
+    program = Program.objects.get(pk=key)
     if not program:
         raise Http404('Program not found')        
     if request.method == 'POST':

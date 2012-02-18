@@ -5,30 +5,27 @@ __copyright__ = 'Copyright (c) 2010 Viktor Kerkez'
 
 import models
 from django import forms
-from google.appengine.ext.db import djangoforms
 
 
-class ProgramForm(djangoforms.ModelForm):
-    frontpage_imagefield = forms.FileField(label='Frontpage Image', required=False)
-    page_imagefield      = forms.FileField(label='Page Image', required=False)
+class ProgramForm(forms.ModelForm):
     class Meta:
         model = models.Program
-        exclude = ['url', 'frontpage_image', 'page_image', 'menu']
+        exclude = ['url', 'menu']
 
 
-class ProjectForm(djangoforms.ModelForm):
+class ProjectForm(forms.ModelForm):
     class Meta:
         model = models.Project
         exclude = ['url']
 
 
-class NewsForm(djangoforms.ModelForm):
+class NewsForm(forms.ModelForm):
     class Meta:
         model = models.News
         exclude = ['url']
 
 
-class GalleryForm(djangoforms.ModelForm):
+class GalleryForm(forms.ModelForm):
     class Meta:
         model = models.Gallery
         exclude = ['url']

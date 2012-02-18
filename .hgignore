@@ -1,10 +1,12 @@
 syntax: glob
-src/appengine_django.zip
-django.zip
-src/.google_appengine
-src/appengine_django
-src/test_extensions
+src/django.zip
+src/djangoappengine
+src/djangotoolbox
+src/autoload
+src/dbindexer
 src/tea
+src/.google_appengine
+src/.gaedata
 .pydevproject
 .project
 .settings
