@@ -52,7 +52,7 @@ class PerartModelWithTitleAndUrl(PerartModel):
 
     @classmethod
     def get_by_url(cls, url):
-        obj = memcache.get('%s-%s' % (cls.name(), url)) #@UndefinedVariable
+        obj = None #memcache.get('%s-%s' % (cls.name(), url)) #@UndefinedVariable
         if obj is None:
             try:
                 obj = cls.objects.get(url=url)

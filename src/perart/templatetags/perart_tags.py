@@ -11,5 +11,5 @@ register = template.Library()
 @register.inclusion_tag('perart/templatetags/render_gallery.html')
 def render_gallery(gallery):
     '''Render a complete gallery'''
-    images = gallery.image_set.fetch(100)
+    images = gallery.images
     return { 'images': images, 'count': len(images) }
