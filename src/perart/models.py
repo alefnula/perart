@@ -79,7 +79,7 @@ class PerartModelWithTitleAndUrl(PerartModel):
     def save(self, *args, **kwargs):
         self.url = self.get_unique_url(self.url, self.title)
         # Must be set after put, because the unputed is saved in memcache!!!
-        memcache.set('%s-%s' % (self.__class__.name(), self.url), self) #@UndefinedVariable
+        #memcache.set('%s-%s' % (self.__class__.name(), self.url), self) #@UndefinedVariable
 
     def delete(self):
         memcache.delete('%s-%s' % (self.__class__.name(), self.url)) #@UndefinedVariable

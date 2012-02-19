@@ -7,7 +7,7 @@ from django.conf.urls.defaults import *
 
 urlpatterns = patterns('perart.views',
     url(r'^$',                                                     'cms.index',       name='perart.index'),
-    url(r'^blob/(?P<model>\w+)/(?P<field>\w+)/(?P<key>[\w-]+)/$',  'cms.blob',        name='perart.blob'),
+    url(r'^blob/(?P<model>\w+)/(?P<field>\w+)/(?P<id>\d+)/$',      'cms.blob',        name='perart.blob'),
     url(r'^news/(?:(?P<url>[\w-]+)/)?$',                           'cms.news',        name='perart.news'),
     url(r'^image/(?P<key>[\w-]+)/(?:(?P<thumbnail>thumbnail)/)?$', 'cms.image',       name='perart.image'),
     url(r'^(?P<url>[\w-]+)/$',                                     'cms.program',     name='perart.program'),

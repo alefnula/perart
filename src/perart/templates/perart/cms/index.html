@@ -45,7 +45,7 @@ $(function () {
   <div class="program">
     <a href="{% url perart.program program.url %}">
       <img style="border: 0;" title="{{ program.title }}"
-           src="{% url perart.blob "program" "frontpage_image" program.key %}"
+           src="{% url perart.blob "program" "frontpage_image" program.id %}"
            border="0" alt="{{ program.title }}" width="165" height="70" />
     </a>
     <p><a href="{% url perart.program program.url %}">{{ program.title }}</a></p>

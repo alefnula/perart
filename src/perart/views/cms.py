@@ -29,12 +29,12 @@ def render_blob(title, blob):
     return response
 
 
-def blob(request, model, field, key):
+def blob(request, model, field, id):
     model = model.lower()
     if model == 'program':
         try:
-            obj = Program.objects.get(pk=key)
-            return render_blob(obj.title, getattr(object, field))
+            obj = Program.objects.get(pk=id)
+            return render_blob(obj.title, getattr(obj, field))
         except Program.DoesNotExist: pass
     raise Http404('Image not found!')
 
