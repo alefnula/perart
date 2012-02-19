@@ -1,9 +1,4 @@
 syntax: glob
-src/django.zip
-src/djangoappengine
-src/djangotoolbox
-src/autoload
-src/dbindexer
 src/tea
 src/.google_appengine
 src/.gaedata
