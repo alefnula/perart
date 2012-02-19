@@ -32,10 +32,11 @@ def render_blob(title, blob):
 def blob(request, model, field, key):
     model = model.lower()
     if model == 'program':
-        object = Program.objects.get(pk=key)
-    else: raise Http404('Image not found!')
-    if object: return render_blob(object.title, getattr(object, field))
-    else: raise Http404('Image not found!')
+        try:
+            obj = Program.objects.get(pk=key)
+            return render_blob(obj.title, getattr(object, field))
+        except Program.DoesNotExist: pass
+    raise Http404('Image not found!')
 
 
 def program(request, url=None):
@@ -65,23 +66,23 @@ def project(request, program_url, project_url):
 
 
 def image(request, key, thumbnail=None):
-    image = Image.get(key)
-    if image:
+    try:
+        image = Image.objects.get(pk=key)
         if thumbnail == 'thumbnail':
             return render_blob(image.gallery.title, image.thumbnail)
         else:
             return render_blob(image.gallery.title, image.image)
-    else:
+    except Image.DoesNotExist:
         raise Http404('Image not found!')
 
 
 def news(request, url=None):
-    all_news = News.all().order('-published')
+    all_news = News.objects.order_by('-published')
     if url is None:
         news = all_news[0]
     else:
         news = News.get_by_url(url)
-    return render_to_response('perart/cms/news.html', {'object': news, 'news': all_news, 'programs': Program.all()},
+    return render_to_response('perart/cms/news.html', {'object': news, 'news': all_news, 'programs': Program.objects.all()},
                               context_instance=RequestContext(request))
 
 

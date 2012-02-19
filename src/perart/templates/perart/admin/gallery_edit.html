@@ -40,7 +40,7 @@ function insert_to_media(data, position) {
 	button_delete.bind('click', function() {
 		if(confirm('Are you sure?\nThis action cannot be undone!')) {
 			elm.fadeOut('slow');
-			$.post('{% url perart.admin_gallery_remove_image %}', {key: encodeURIComponent(data.key)});
+			$.post('{% url perart.admin.gallery.remove_image %}', {id: encodeURIComponent(data.id)});
 		}
 	});
 	
@@ -104,7 +104,7 @@ $(function() {
 {% endblock %}
 
 {% block admin_content %}
-<form method="post" enctype="multipart/form-data" action="{% if object %}{{ object.get_object_edit_url }}{% else %}{{ model.get_model_edit_url }}{% endif %}">
+<form method="post" enctype="multipart/form-data" action="{% if object %}{{ object.get_edit_url }}{% else %}{{ model.get_add_url }}{% endif %}">
 {% tea_form form _("Save") %}
 </form>
 
@@ -120,7 +120,7 @@ $(function() {
 
 <div id="upload_div" class="mediaupload">
   <form method="post" style="margin:0;padding:0;" enctype="multipart/form-data"
-        action="{% url perart.admin_gallery_upload_image object.key %}" target="upload_target"
+        action="{% url perart.admin.gallery.upload_image object.id %}" target="upload_target"
         onsubmit="$('#upload_wait').show(); $('#upload_submit').attr('disabled', true);">
     <table style="width: 100%"><tbody>
 	  <tr>

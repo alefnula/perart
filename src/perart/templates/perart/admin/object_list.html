@@ -1,0 +1,33 @@
+{% extends "perart/admin.html" %}
+{% load tea %}
+
+{% block admin_content %}
+
+{% if removed %}
+<p id="removed">{{ model_name }} deleted</p>
+{% endif %}
+
+<p><a href="{{ model.get_add_url }}">Add new {{ model_name|lower }}</a><br/></p>
+
+<table class="formatted" cellspacing="0" cellpadding="0">
+  <thead>
+    <tr>
+      {% for field in model.FIELD_LIST %}<td width="{{ field.width }}">{{ field.name|title }}</td>{% endfor %}
+      {% for action in model.ACTION_LIST %}<td width="120">{{ action.name|title }}</td>{% endfor %}
+      <td width="120">Edit</td>
+      <td width="120">Delete</td>
+    </tr>
+  </thead>
+  <tbody>
+  {% for object in object_list %}
+    <tr id="row_{{ object.id }}">
+      {% for field in model.FIELD_LIST %}<td>{{ object|attr:field.name|escape }}</td>{% endfor %}
+      {% for action in model.ACTION_LIST %}<td><a href="{{ object|attr:action.action }}">{{ action.name }}</a></td>{% endfor %}
+      <td><a href="{{ object.get_edit_url }}">Edit</a></td>
+      <td><a href="{{ object.get_delete_url}}" onclick="return confirm('Are you sure? This action cannot be undone!')">Delete</a></td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+
+{% endblock %}

@@ -22,21 +22,27 @@ FETCH_ALL = 1000
 
 
 class PerartModel(object):
-    def key(self):
-        return self.id
+    FIELD_LIST  = []
+    ACTION_LIST = []
     
     @classmethod
     def name(cls):
         return cls.__name__
 
     @classmethod
-    def get_model_edit_url(cls):
-        return reverse('perart.admin_%s_edit' % cls.name().lower())
-    def get_object_edit_url(self):
-        return reverse('perart.admin_%s_edit' % self.name().lower(), args=[self.key()])
-    @classmethod
     def get_list_url(cls):
-        return reverse('perart.admin_%s_list' % cls.name().lower())
+        return reverse('perart.admin.%s.list' % cls.name().lower())
+
+    @classmethod
+    def get_add_url(cls):
+        return reverse('perart.admin.%s.edit' % cls.name().lower())
+
+    def get_edit_url(self):
+        return reverse('perart.admin.%s.edit' % self.name().lower(), args=[self.id])
+    
+    def get_delete_url(self):
+        return reverse('perart.admin.%s.delete' % self.name().lower(), args=[self.id])
+
 
 
 
@@ -55,12 +61,13 @@ class PerartModelWithTitleAndUrl(PerartModel):
         return obj
 
     @classmethod
-    def get_unique_url(cls, url):
+    def get_unique_url(cls, old_url, title):
         '''Function takes in an url and checks if it's already used.
         
         If the url already exists then adds a number to the end of the url.
         '''
-        url = unicode(slugify(url))
+        url = unicode(slugify(title))
+        if url == old_url: return url
         nr = 0
         obj = cls.get_by_url(url)
         while obj:
@@ -70,8 +77,7 @@ class PerartModelWithTitleAndUrl(PerartModel):
         return url
 
     def save(self, *args, **kwargs):
-        if self.url is None:
-            self.url = self.get_unique_url(self.title)
+        self.url = self.get_unique_url(self.url, self.title)
         # Must be set after put, because the unputed is saved in memcache!!!
         memcache.set('%s-%s' % (self.__class__.name(), self.url), self) #@UndefinedVariable
 
@@ -82,7 +88,13 @@ class PerartModelWithTitleAndUrl(PerartModel):
 
 
 class Program(PerartModelWithTitleAndUrl, models.Model):
-    MENU_CACHE_KEY = 'program-menu'
+    MENU_CACHE_KEY = 'program-menu' 
+    FIELD_LIST = [
+        {'name': 'title', 'width': 350},
+    ]
+    ACTION_LIST = [
+        {'name': 'Edit Menu', 'action': 'get_edit_menu_url'},
+    ]
     
     title           = models.CharField(max_length=511)
     url             = models.CharField(max_length=511, null=True, blank=True)
@@ -91,6 +103,12 @@ class Program(PerartModelWithTitleAndUrl, models.Model):
     frontpage_image = BlobField(null=True, blank=True)
     page_image      = BlobField(null=True, blank=True)
     menu            = models.TextField(default='')
+
+
+    # Actions
+    @property
+    def get_edit_menu_url(self):
+        return reverse('perart.admin.program.menu_edit', args=[self.id])
 
     def menu_cache_key(self):
         return 'program-menu-%s' % self.url
@@ -101,9 +119,9 @@ class Program(PerartModelWithTitleAndUrl, models.Model):
         else: menu = None
         if menu is None: 
             data = {'G': {}, 'P': {}}
-            for gallery in self.gallery_set:
+            for gallery in self.galleries:
                 data['G'][gallery.title.lower()] = gallery
-            for project in self.project_set:
+            for project in self.projects:
                 data['P'][project.title.lower()] = project
             menu = Menu.create(self.menu, data)
             memcache.set(self.menu_cache_key(), menu) #@UndefinedVariable
@@ -122,14 +140,35 @@ class Program(PerartModelWithTitleAndUrl, models.Model):
         super(Program, self).delete()        
 
 
+    @property
+    def projects(self):
+        return Project.objects.filter(program=self)
+    
+    @property
+    def galleries(self):
+        return Gallery.objects.filter(program=self)
+
+
 
 class Gallery(PerartModelWithTitleAndUrl, models.Model):
+    FIELD_LIST    = [
+        {'name': 'title',   'width': 350},
+    ]
+    
     program = models.ForeignKey(Program)
     title   = models.CharField(max_length=511)
     url     = models.CharField(max_length=511)
 
+    @property
+    def images(self):
+        return Image.objects.filter(gallery=self)
+
     def absolute_url(self):
         return reverse('perart.gallery', args=[self.program.url, self.url])
+
+    def save(self, *args, **kwargs):
+        PerartModelWithTitleAndUrl.save(self)
+        models.Model.save(self, *args, **kwargs)
 
 
 
@@ -153,15 +192,19 @@ class Image(PerartModel, models.Model):
         self.thumbnail = img.execute_transforms(output_encoding=images.JPEG)
 
     def url(self):
-        return reverse('perart.image', args=[self.key()])
+        return reverse('perart.image', args=[self.id])
 
     def thumbnail_url(self):
-        return reverse('perart.image', args=[self.key(), 'thumbnail'])
+        return reverse('perart.image', args=[self.id, 'thumbnail'])
 
 
 
 class Project(PerartModelWithTitleAndUrl, models.Model):
-    '''Page table holds page contents'''
+    FIELD_LIST    = [
+        {'name': 'title',   'width': 350},
+        {'name': 'program', 'width': 120}
+    ]
+    
     program = models.ForeignKey(Program)
     title   = models.CharField(max_length=511)
     url     = models.CharField(max_length=511, null=True, blank=True) # clean url title like 'about' for 'About' etc.
@@ -171,9 +214,18 @@ class Project(PerartModelWithTitleAndUrl, models.Model):
     def absolute_url(self):
         return reverse('perart.project', args=[self.program.url, self.url])
 
+    def save(self, *args, **kwargs):
+        PerartModelWithTitleAndUrl.save(self)
+        models.Model.save(self, *args, **kwargs)
+
 
 
 class News(PerartModelWithTitleAndUrl, models.Model):
+    FIELD_LIST = [
+        {'name': 'title',     'width': 350},
+        {'name': 'published', 'width': 120}
+    ]
+    
     title     = models.CharField(max_length=511)
     url       = models.CharField(max_length=511, null=True, blank=True)
     text      = models.TextField(null=True, blank=True)
@@ -185,6 +237,9 @@ class News(PerartModelWithTitleAndUrl, models.Model):
                  'avgust', 'septembar', 'oktobar', 'novembar', 'decembar'][self.published.month-1],
                  self.published.year)
 
+    def save(self, *args, **kwargs):
+        PerartModelWithTitleAndUrl.save(self)
+        models.Model.save(self, *args, **kwargs)
 
 
 class MenuParseError(Exception):

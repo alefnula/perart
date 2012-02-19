@@ -30,11 +30,11 @@ $(function() {
 
 {% block content %}
 <table id="admin-menu" cellspacing="0" cellpadding="0"><thead><tr>
-<th{% ifequal page "project" %} class="selected"{% endifequal %}><a href="{% url perart.admin_project_list %}">Projects</a></th>
-<th{% ifequal page "news" %} class="selected"{% endifequal %}><a href="{% url perart.admin_news_list %}">News</a></th>
-<th{% ifequal page "program" %} class="selected"{% endifequal %}><a href="{% url perart.admin_program_list %}">Programs</a></th>
-<th{% ifequal page "gallery" %} class="selected"{% endifequal %}><a href="{% url perart.admin_gallery_list %}">Galleries</a></th>
-<th{% ifequal page "main_menu" %} class="selected"{% endifequal %}><a href="{% url perart.admin_settings_main_menu_edit %}">Main Menu</a></th>
+<th{% ifequal page "project" %} class="selected"{% endifequal %}><a href="{% url perart.admin.project.list %}">Projects</a></th>
+<th{% ifequal page "news" %} class="selected"{% endifequal %}><a href="{% url perart.admin.news.list %}">News</a></th>
+<th{% ifequal page "program" %} class="selected"{% endifequal %}><a href="{% url perart.admin.program.list %}">Programs</a></th>
+<th{% ifequal page "gallery" %} class="selected"{% endifequal %}><a href="{% url perart.admin.gallery.list %}">Galleries</a></th>
+<th{% ifequal page "main_menu" %} class="selected"{% endifequal %}><a href="{% url perart.admin.settings.main_menu_edit %}">Main Menu</a></th>
 </tr></thead></table>
 <div id="admin-content">{% block admin_content %}Nothing here to see, move along!{% endblock %}</div>
 {% endblock %}

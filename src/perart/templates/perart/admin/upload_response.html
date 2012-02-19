@@ -5,9 +5,9 @@
 		<script>
 			if(parent && 'upload_response' in parent) {
 				parent.upload_response({
-					'status': '{{ status }}',
-					'key': '{{ key }}',
-					'thumbnail': '{{ thumbnail }}'
+					'status'    : '{{ status }}',
+					'id'        : '{{ id }}',
+					'thumbnail' : '{{ thumbnail }}'
 				});
 			}
 		</script>

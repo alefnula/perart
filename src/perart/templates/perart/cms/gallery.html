@@ -11,7 +11,7 @@
 
 {% block content %}
 <div id="emptybox">&nbsp;
-  {% for image in object.image_set %}
+  {% for image in object.images %}
   <div style="float: right; display: block;">
     <img src="{{ image.thumbnail_url }}" style="padding: 1px; cursor: pointer;"
          onclick="$('#gallery-image').attr('src', '{{ image.url }}');"/>
@@ -23,7 +23,7 @@
 <div id="emptybox2">
   <div id="maintxt">
     <div style=" display: block; width: 100%; text-align: center;">
-      <img id="gallery-image" src="{{ object.image_set.0.url }}" style="" />
+      <img id="gallery-image" src="{{ object.images.0.url }}" style="" />
       <p id="gallery-title" style="margin: 1em;"><b>{{ object.title|upper }}</b></p>
     </div>
   </div>

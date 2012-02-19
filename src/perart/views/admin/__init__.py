@@ -21,15 +21,25 @@ from perart.forms import ProgramForm, ProjectForm, NewsForm
 # Admin interface
 
 @admin_required
-def object_list(request, queryset, template_name, extra_content=None):
-    data = {} if extra_content is None else extra_content.copy()
-    data['object_list'] = queryset()
+def object_list(request, queryset, template_name='perart/admin/object_list.html', extra_content=None):
+    data       = {} if extra_content is None else extra_content.copy()
+    model      = queryset.im_self.model().__class__
+    model_name = model.__name__
+    data.update({
+        'object_list' : queryset(),
+        'model'       : model,
+        'model_name'  : model_name,
+        'page'        : model_name.lower(),
+    })
     return render_to_response(template_name, data, context_instance=RequestContext(request))
 
 
 @admin_required
-def object_edit(request, model, form, template='perart/admin/object_edit.html', extra_content=None, key=None):
-    obj = model.objects.get(pk=key) if key is not None else None
+def object_edit(request, model, form, template='perart/admin/object_edit.html', extra_content=None, id=None):
+    try:
+        obj = model.objects.get(pk=id) if id is not None else None
+    except model.DoesNotExist:
+        raise Http404('%s not found' % model.__name__)
     if request.method == 'GET':
         f = form(instance=obj)
     if request.method == 'POST':
@@ -39,14 +49,14 @@ def object_edit(request, model, form, template='perart/admin/object_edit.html', 
             if hasattr(obj, 'create_thumbnail'):
                 obj.create_thumbnail()
                 obj.save()
-            return HttpResponseRedirect(model.get_list_url() + ('?saved=%s' % str(obj.key())))
+            return HttpResponseRedirect(model.get_list_url() + ('?saved=%s' % obj.id))
     data = {} if extra_content is None else extra_content.copy()
     data.update({'form': f, 'object': object, 'model': model})
     return render_to_response(template, data, context_instance=RequestContext(request))
 
 
 @admin_required
-def object_remove(request, model, key):
+def object_delete(request, model, key):
     obj = model.objects.get(pk=key)
     if not obj:
         raise Http404('%s not found' % model.__name__)
@@ -56,17 +66,18 @@ def object_remove(request, model, key):
 
 
 def program_menu_edit(request, key):
-    program = Program.objects.get(pk=key)
-    if not program:
-        raise Http404('Program not found')        
-    if request.method == 'POST':
-        program.menu = request.POST.get('menu', '')
-        try:
-            program.get_menu(use_cache=False)
-        except Exception, error:
-            return render_to_response('perart/admin/program_menu_edit.html', {'program': program, 'error': error}, 
-                                      context_instance=RequestContext(request))
-        program.put()
-        return HttpResponseRedirect(Program.get_list_url())
-    return render_to_response('perart/admin/program_menu_edit.html', {'program': program}, 
-                              context_instance=RequestContext(request))       
+    try:
+        program = Program.objects.get(pk=key)
+        if request.method == 'POST':
+            program.menu = request.POST.get('menu', '')
+            try:
+                program.get_menu(use_cache=False)
+            except Exception, error:
+                return render_to_response('perart/admin/program_menu_edit.html', {'program': program, 'error': error}, 
+                                          context_instance=RequestContext(request))
+            program.save()
+            return HttpResponseRedirect(Program.get_list_url())
+        return render_to_response('perart/admin/program_menu_edit.html', {'program': program}, 
+                                  context_instance=RequestContext(request))
+    except Program.DoesNotExist:
+        raise Http404('Program not found')
