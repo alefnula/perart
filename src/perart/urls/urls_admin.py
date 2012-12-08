@@ -38,7 +38,7 @@ urlpatterns = patterns('perart.views',
     url(r'^gallery-delete/(?P<id>\d+)/$', 'admin.object_delete', {'model': Gallery}, name='perart.admin.gallery.delete'),
 
     # Gallery
-    url(r'^gallery-edit/(?P<id>\d+)/$',         'admin.gallery.edit',         name='perart.admin.gallery.edit'),
+    url(r'^gallery-edit/(?:(?P<id>\d+)/)?$',    'admin.gallery.edit',         name='perart.admin.gallery.edit'),
     url(r'^gallery-upload-image/(?P<id>\d+)/$', 'admin.gallery.upload_image', name='perart.admin.gallery.upload_image'),    
     url(r'^gallery-remove-image/$',             'admin.gallery.remove_image', name='perart.admin.gallery.remove_image'),
 
