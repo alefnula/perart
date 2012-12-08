@@ -56,8 +56,8 @@ def object_edit(request, model, form, template='perart/admin/object_edit.html', 
 
 
 @admin_required
-def object_delete(request, model, key):
-    obj = model.objects.get(pk=key)
+def object_delete(request, model, id):
+    obj = model.objects.get(pk=id)
     if not obj:
         raise Http404('%s not found' % model.__name__)
     obj.delete()
