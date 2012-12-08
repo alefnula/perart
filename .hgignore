@@ -1,4 +1,6 @@
 syntax: glob
+GoogleAppEngineLauncher.app
+.DS_Store
 src/tea
 src/.google_appengine
 src/.gaedata
