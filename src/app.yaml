@@ -30,4 +30,5 @@ handlers:
 
 skip_files:
 - ^(.*/)?.*\.py[co]
+- .DS_Store
 - backup

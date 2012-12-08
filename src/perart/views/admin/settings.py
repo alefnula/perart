@@ -24,6 +24,6 @@ def main_menu_edit(request):
             return render_to_response('perart/admin/main_menu_edit.html', {'menu': menu, 'error': error, 'page': 'main_menu'}, 
                                       context_instance=RequestContext(request))
         Settings.set_main_menu(menu)
-        return HttpResponseRedirect(reverse('perart.admin_settings_main_menu_edit') + '?saved=1')
+        return HttpResponseRedirect(reverse('perart.admin.settings.main_menu_edit') + '?saved=1')
     return render_to_response('perart/admin/main_menu_edit.html', {'menu': menu, 'page': 'main_menu'}, 
                               context_instance=RequestContext(request))
