@@ -2,7 +2,6 @@
 
 {% block menu %}
 <ul class="sf-menu">
-  <li><a href="{% url perart.index %}">početna</a></li>
   {% for program in programs %}
   <li><a href="{% url perart.program program.url %}">{{ program.title }}</a></li>
   {% endfor %}

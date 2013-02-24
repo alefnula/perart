@@ -18,7 +18,7 @@ from perart.models import Program, Project, News, Image, Menu, Gallery, Settings
 
 
 def index(request):
-    return render_to_response('perart/cms/index.html', {'programs': Program.objects.all(),
+    return render_to_response('perart/cms/index.html', {'programs': Program.objects.order_by('order'),
                                                         'menu': Settings.get_main_menu(),
                                                         'news': News.objects.all().order_by('-published')[:15]},
                               context_instance=RequestContext(request))

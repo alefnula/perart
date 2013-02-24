@@ -4,9 +4,9 @@
 
 {% block menu %}
 <ul class="sf-menu">
-  <li><a href="{% url perart.program program.url %}">o programu</a></li>
+  <li><a href="{% url perart.program program.url %}">o programu &nbsp; &nbsp; |</a></li>
   {% autoescape off %}{{ program.get_menu.spitout }}{% endautoescape %}
-  <li><a href="mailto:perart.office@gmail.com">kontakt</a></li>
+  <li><a href="mailto:perart.office@gmail.com">| &nbsp; &nbsp; kontakt</a></li>
 </ul>
 {% endblock %}
 

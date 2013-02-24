@@ -103,6 +103,7 @@ class Program(PerartModelWithTitleAndUrl, models.Model):
     frontpage_image = BlobField(null=True, blank=True)
     page_image      = BlobField(null=True, blank=True)
     menu            = models.TextField(default='')
+    order           = models.IntegerField(default=0)
 
 
     # Actions
@@ -336,8 +337,8 @@ class Menu(object):
         s = ''
         if self.submenu:
             s += '' if first else '<ul>'
-            for menu in self.submenu:
-                s += '<li><a href="%s">%s</a>%s</li>' % (menu.link, menu.name, menu.spitout(False))
+            for i, menu in enumerate(self.submenu):
+                s += '<li><a href="%s">%s%s</a>%s</li>' % (menu.link, '' if (i == 0 or not first) else ' | &nbsp; &nbsp; ', menu.name, menu.spitout(False))
             s += '' if first else '</ul>' 
         return s
 
