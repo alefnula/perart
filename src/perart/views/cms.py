@@ -82,7 +82,7 @@ def news(request, url=None):
         news = all_news[0]
     else:
         news = News.get_by_url(url)
-    return render_to_response('perart/cms/news.html', {'object': news, 'news': all_news, 'programs': Program.objects.all()},
+    return render_to_response('perart/cms/news.html', {'object': news, 'news': all_news, 'programs': Program.objects.order_by('order')},
                               context_instance=RequestContext(request))
 
 
