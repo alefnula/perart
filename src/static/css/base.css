@@ -27,7 +27,7 @@ body {
     height:19;
     background-color:transparent;
 	font-family: Verdana, Arial, Helvetica, sans-serif;
-	font-size: 13px;
+	font-size: 11px;
 	color: #737373;
 }
 
@@ -53,6 +53,11 @@ body {
     text-align: left;
 }
 
+#meni a.first-menu {
+	font-size: 12px;
+	padding: .75em .35em .75em 0em;
+}
+
 #meni a:link, a:visited, a:active {
 	text-decoration: none;
 	font-weight: bold;
@@ -62,6 +67,20 @@ body {
 	text-decoration: none;
 	font-weight: bold;
 	color: #ff9a00;
+}
+
+#meni span.bar {
+	margin: 0em 0.4em 0em 0em;
+	padding: 0;
+	display: inline;
+	border-right: 1px solid #737373;
+}
+
+#meni span.end-bar {
+	margin: 0em 0em 0em 0.4em;
+	padding: 0;
+	display: inline;
+	border-right: 1px solid #737373;
 }
 
 #spacer {
@@ -308,3 +327,5 @@ body {
 	margin-left:40px;
 	padding-bottom:5px;
 }
+
+

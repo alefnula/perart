@@ -338,7 +338,9 @@ class Menu(object):
         if self.submenu:
             s += '' if first else '<ul>'
             for i, menu in enumerate(self.submenu):
-                s += '<li><a href="%s">%s%s</a>%s</li>' % (menu.link, '' if (i == 0 or not first) else ' | &nbsp; &nbsp; ', menu.name, menu.spitout(False))
+                bar = '<span class="bar"></span>' if (i != 0 and first) else ''
+                cls = ' class="first-menu"' if first else ''
+                s += '<li><a%s href="%s">%s%s</a>%s</li>' % (cls, menu.link, bar, menu.name, menu.spitout(False))
             s += '' if first else '</ul>' 
         return s
 
