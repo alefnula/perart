@@ -3,9 +3,9 @@
 {% block menu %}
 <ul class="sf-menu">
   {% for program in programs %}
-  <li><a href="{% url perart.program program.url %}">{{ program.title }}</a></li>
+  <li><a class="first-menu" href="{% url perart.program program.url %}">{{ program.title }}<span class="end-bar"></span></a></li>
   {% endfor %}
-  <li><a href="mailto:perart.office@gmail.com">kontakt</a></li>
+  <li><a class="first-menu" href="mailto:perart.office@gmail.com">kontakt</a></li>
 </ul>
 {% endblock %}
 
