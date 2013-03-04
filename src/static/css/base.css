@@ -23,7 +23,7 @@ body {
 #groupmeni {
     position:relative;
     display: block;
-    width:950px;
+    width:980px;
     height:19;
     background-color:transparent;
 	font-family: Verdana, Arial, Helvetica, sans-serif;
@@ -34,7 +34,7 @@ body {
 #logo {
     position:relative;
     float:left;
-    width:300px;
+    width:330px;
     background-color:#FFFFFF;
     display: inline;
 }
