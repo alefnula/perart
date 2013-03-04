@@ -1,0 +1,125 @@
+{% extends "perart/cms.html" %}
+
+{% block menu %}
+<ul class="sf-menu">
+  {% for program in programs %}
+  <li><a class="first-menu" href="{% url perart.program program.url %}">{{ program.title }}<span class="end-bar"></span></a></li>
+  {% endfor %}
+</ul>
+{% endblock %}
+
+
+{% block content %}
+<style>
+	.key {
+		vertical-align: top;
+		color: #FF9A00;
+		font-weight: bold;
+		font-size: 13px;
+		width: 100px;
+	}
+	.key a {
+		color: #FF9A00;
+		text-decoration: none;
+		cursor: hand;
+	}
+	.value {
+		color: #737373;
+	}
+	.value a {
+		color: #737373;
+	}
+	
+	hr {
+		margin-top: 10px;
+		margin-bottom: 10px;
+	}
+</style>
+
+<div id="emptybox" style="height: 200px;">&nbsp;
+</div>
+
+<div id="emptybox3">&nbsp;</div>
+
+<div id="emptybox2">
+  <div id="maintxt">
+	<table>
+		<tbody>
+			<tr>
+				<td class="key">Email:</td>
+				<td class="value"><a href="mailto:office@perart.org">office@perart.org</a></td>
+			</tr>
+			<tr>
+				<td class="key">Website:</td>
+				<td class="value"><a href="http://www.perart.org">www.perart.org</a></td>
+			</tr>
+		</tbody>
+	</table>
+	
+	<br/>
+	
+	<table>
+		<tbody>
+			<tr>
+				<td class="key"><a href="https://www.facebook.com/pages/PerArt/132080216888687">Facebook</a></td>
+			</tr>
+			<tr>
+				<td class="key"><a href="http://vimeo.com/perart/">Vimeo</a></td>
+			</tr>
+		</tbody>
+	</table>
+	
+	<br/>
+	
+	<table>
+		<tbody>
+			<tr>
+				<td class="key">Adresa:</td>
+				<td class="value">Per.Art<br/>
+					Bulevar Cara Lazara 83<br/>
+					Novi Sad
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	
+	<br/>
+	
+	<table>
+		<tbody>
+			<tr>
+				<td class="key">Newsletter</td>
+			</tr>
+		</tbody>
+	</table>
+	
+	<hr width="200"/>
+	
+	<p>Pratite aktivnosti Per.Art-a<br/>
+	Prijavite se našu newsletter listu!</p>
+	
+	<hr width="200"/>
+	
+	<form method="POST" action="{% url perart.contact %}">
+		{% if message %}
+		<small{% if not succeeded %} style="color: red"{% endif %}>{{ message }}</small>
+		{% endif %}
+		<table>
+			<tbody>
+				<tr>
+					<td>Vaše ime:</td>
+					<td>{{ form.name }}</td>
+				</tr>
+			</tbody>
+			<tr>
+				<td>Email:</td>
+				<td>{{ form.email }}</td>
+			</tr>
+			<tr>
+				<td><input type="submit" value="Prijavi se" /></td>
+			</tr>
+		</table>
+	</form>
+  </div>
+</div>
+{% endblock %}

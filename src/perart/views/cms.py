@@ -15,6 +15,7 @@ from django.http import HttpResponse, Http404
 from django.core.urlresolvers import reverse
 
 from perart.models import Program, Project, News, Image, Menu, Gallery, Settings
+from perart.forms import NewsletterForm
 
 
 def index(request):
@@ -86,14 +87,32 @@ def news(request, url=None):
                               context_instance=RequestContext(request))
 
 
-#def image(request, size, key):
-#    image = Media.get_image(key, size)
-#    if image:
-#        response = HttpResponse(image.file if size == 'full' else image.thumbnail, mimetype='image/jpeg')
-#        response['Content-disposition'] = 'filename="%s"' % str(image.name)
-#        return response
-#    else:
-#        raise Http404('Image not found!')
+def contact(request):
+    succeeded = False
+    if request.method == 'POST':
+        form = NewsletterForm(request.POST)
+        if form.is_valid():
+            if form.send_email():
+                message   = u'Uspešno ste prijavljeni, hvala na interesovanju.'
+                succeeded = True
+            else:
+                message = u'Molimo Vas da ponovite prijavu, došlo je do greške.'
+        else:   
+            if 'name' in form.errors and 'email' not in form.errors:
+                message = u'Molimo Vas da popunite Vaše ime'
+            elif 'email' in form.errors and 'name' not in form.errors:
+                message = u'Molimo Vas da unesete ispravnu email adresu.'
+            else:
+                message = u'Molimo Vas da popunite podatke.'
+    else:
+        form = NewsletterForm()
+        message = ''
+    return render_to_response('perart/cms/contact.html', {
+               'programs'  : Program.objects.order_by('order'),
+               'form'      : form,
+               'message'   : message,
+               'succeeded' : succeeded,
+           }, context_instance=RequestContext(request))
 
 
 #def media(request, key, name):
