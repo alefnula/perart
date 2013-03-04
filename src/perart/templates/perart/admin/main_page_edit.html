@@ -1,0 +1,26 @@
+{% extends "perart/admin.html" %}
+{% load tea %}
+
+{% block admin_content %}
+<script type="text/javascript">
+<!--
+$(function() {
+    $('textarea').{% tinymce %}
+});
+//-->
+</script>
+
+<h2>Main Page Editing</h2>
+
+<form method="post" enctype="multipart/form-data" action="{% url perart.admin.settings.main_page_edit %}">
+  <div class="tea-form">
+    {% if saved %}<h3 id="row_1">Main Page successfully saved</h3>{% endif %}
+    {% if error %}<ul class="errorlist"><li>{{ error }}</li></ul>{% endif %}
+	<textarea name="text" rows="30" style="width: 98%">{{ text }}</textarea>
+	<div class="submit-row">
+      <input class="default" type="submit" value="Save"/>
+    </div>
+  </div>
+</form>
+
+{% endblock %}

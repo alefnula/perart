@@ -19,10 +19,12 @@ from perart.forms import NewsletterForm
 
 
 def index(request):
-    return render_to_response('perart/cms/index.html', {'programs': Program.objects.order_by('order'),
-                                                        'menu': Settings.get_main_menu(),
-                                                        'news': News.objects.all().order_by('-published')[:15]},
-                              context_instance=RequestContext(request))
+    return render_to_response('perart/cms/index.html', {
+                                  'programs' : Program.objects.order_by('order'),
+                                  'menu'     : Settings.MainMenu(),
+                                  'text'     : Settings.MainPage(),
+                                  'news'     : News.objects.all().order_by('-published')[:15]
+                              }, context_instance=RequestContext(request))
 
 def render_blob(title, blob):
     response = HttpResponse(blob, mimetype='image/jpeg')

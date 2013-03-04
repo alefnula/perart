@@ -344,30 +344,61 @@ class Menu(object):
             s += '' if first else '</ul>' 
         return s
 
+    
 
 
 class Settings(models.Model):
+    MAIN_MENU = 'main-menu'
+    MAIN_PAGE = 'main_page'
+    
     key   = models.CharField(max_length=255)
     value = models.TextField(default='')
 
     @staticmethod
-    def get_main_menu_object():
-        obj, _ = Settings.objects.get_or_create(key='main-menu')
+    def get_object(name):
+        obj = memcache.get('settings-%s' % name)
+        if obj is None:
+            pair, _ = Settings.objects.get_or_create(key=name)
+            obj = pair.value
+            memcache.set('settings-%s' % name, obj)
         return obj
-
-    @staticmethod
-    def set_main_menu(value):
-        s = Settings.get_main_menu_object()
-        s.value = value
-        s.save()
-        memcache.delete('setting-main-menu') #@UndefinedVariable
-
-    @staticmethod
-    def get_main_menu():
-        menu = memcache.get('setting-main-menu') #@UndefinedVariable
-        if menu is None:
-            s = Settings.get_main_menu_object()
-            menu = Menu.create(s.value, {})
-            memcache.set('settings-main-menu', menu) #@UndefinedVariable
-        return menu
     
+    @staticmethod
+    def set_object(name, value):
+        pair, _ = Settings.objects.get_or_create(key=name)
+        pair.value = value
+        pair.save()
+        memcache.delete('settings-%s' % name) #@UndefinedVariable
+
+    @staticmethod
+    def MainMenu():
+        return Menu.create(Settings.get_object(Settings.MAIN_MENU), {})
+
+    @staticmethod
+    def MainPage():
+        return Settings.get_object(Settings.MAIN_PAGE)
+
+#    @staticmethod
+#    def set_main_menu(value):
+#        s = Settings.get_object('main-menu')
+#        s.value = value
+#        s.save()
+#        memcache.delete('settings-main-menu') #@UndefinedVariable
+
+#    @staticmethod
+#    def get_main_menu():
+#        menu = memcache.get('settings-main-menu') #@UndefinedVariable
+#        if menu is None:
+#            s = Settings.get_object()
+#            menu = Menu.create(s.value, {})
+#            memcache.set('settings-main-menu', menu) #@UndefinedVariable
+#        return menu
+    
+
+#    @staticmethod
+#    def get_main_page():
+#        page = memcache.get('settings-main-page')
+#        if page is None:
+#            page = Settings.get_main_page_object()
+#            memcache.set('settings-main-page', page)
+#        return page

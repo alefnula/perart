@@ -15,7 +15,8 @@ from perart.models import Settings, Menu
 
 @admin_required
 def main_menu_edit(request):
-    menu = Settings.get_main_menu_object().value
+    
+    menu = Settings.get_object(Settings.MAIN_MENU)
     if request.method == 'POST':
         menu = request.POST.get('menu', '')
         try:
@@ -23,7 +24,19 @@ def main_menu_edit(request):
         except Exception, error:
             return render_to_response('perart/admin/main_menu_edit.html', {'menu': menu, 'error': error, 'page': 'main_menu'}, 
                                       context_instance=RequestContext(request))
-        Settings.set_main_menu(menu)
+        Settings.set_object(Settings.MAIN_MENU, menu)
         return HttpResponseRedirect(reverse('perart.admin.settings.main_menu_edit') + '?saved=1')
     return render_to_response('perart/admin/main_menu_edit.html', {'menu': menu, 'page': 'main_menu'}, 
+                              context_instance=RequestContext(request))
+
+
+
+@admin_required
+def main_page_edit(request):
+    text = Settings.get_object(Settings.MAIN_PAGE)
+    if request.method == 'POST':
+        text = request.POST.get('text', '')
+        Settings.set_object(Settings.MAIN_PAGE, text)
+        return HttpResponseRedirect(reverse('perart.admin.settings.main_page_edit') + '?saved=1')
+    return render_to_response('perart/admin/main_page_edit.html', {'text': text, 'page': 'main_page'}, 
                               context_instance=RequestContext(request))

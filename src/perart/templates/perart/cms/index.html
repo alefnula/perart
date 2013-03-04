@@ -40,11 +40,8 @@ $(function () {
 
 {% block content %}
 <div id="emptybox5">
-  <p><strong>Per.Art</strong> je organizacija koja deluje u oblasti savremenih izvođačkih umetnosti.</p>
-  <p>Grupa okupljena oko organizacije <strong>Per.Art</strong>, od 1999. godine, u saradnji sa raznim
-  drugim organizacijama realizuje projekte u Srbiji i inostranstvu, a 2005. registruje se kao udruženje
-  građana u Novom Sadu.</p>
-  <p id="pcont"><strong>Per.Art</strong> svoje aktivnosti sprovodi kroz sledeće programe:</p>
+  {% autoescape off %}{{ text }}{% endautoescape %}
+  <p id="pcont"></p>
 </div>
 
 <div id="programs">
