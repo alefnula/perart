@@ -96,6 +96,7 @@ def contact(request):
         if form.is_valid():
             if form.send_email():
                 message   = u'Uspešno ste prijavljeni, hvala na interesovanju.'
+                form = NewsletterForm()
                 succeeded = True
             else:
                 message = u'Molimo Vas da ponovite prijavu, došlo je do greške.'

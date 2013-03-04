@@ -17,8 +17,8 @@ ADMINS = (
 )
 MANAGERS = ADMINS
 
-PERART_EMAIL = ['alefnula@gmail.com']
-#PERART_EMAIL = ['office@perart.org']
+#PERART_EMAIL = 'alefnula@gmail.com'
+PERART_EMAIL = 'office@perart.org'
 
 # Activate django-dbindexer for the default database
 DATABASES['native'] = DATABASES['default']

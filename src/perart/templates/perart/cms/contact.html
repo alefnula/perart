@@ -3,7 +3,11 @@
 {% block menu %}
 <ul class="sf-menu">
   {% for program in programs %}
-  <li><a class="first-menu" href="{% url perart.program program.url %}">{{ program.title }}<span class="end-bar"></span></a></li>
+  <li>
+  	<a class="first-menu" href="{% url perart.program program.url %}">
+  	{{ program.title }}{% if not forloop.last %}<span class="end-bar"></span>{% endif %}
+ 	</a>
+  </li>
   {% endfor %}
 </ul>
 {% endblock %}
