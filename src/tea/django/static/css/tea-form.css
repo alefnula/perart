@@ -1,0 +1,260 @@
+/* GENERAL FORM LAYOUT */
+
+.tea-form {
+    margin: 10px;
+    padding: 10px;
+    font-family:"Lucida Grande","DejaVu Sans","Bitstream Vera Sans",Verdana,Arial,sans-serif;
+}
+
+.tea-form fieldset {
+    margin: 0;
+    padding: 0;
+}
+
+
+/* MESSAGES & ERRORS */
+
+.tea-form ul.messagelist {
+    padding: 0 0 5px 0;
+    margin: 0;
+}
+
+.tea-form ul.messagelist li {
+    font-size: 12px;
+    display: block;
+    padding: 4px 5px 4px 25px;
+    margin: 0 0 3px 0;
+    border-bottom: 1px solid #ddd;
+    color: #666;
+    background: #ffc url(../img/admin/icon_success.gif) 5px .3em no-repeat;
+}
+
+.tea-form .errornote {
+    font-size: 12px !important;
+    display: block;
+    padding: 4px 5px 4px 25px;
+    margin: 0 0 3px 0;
+    border: 1px solid red;
+    color: red;
+    background: #ffc url(/media/img/admin/icon_error.gif) 5px .3em no-repeat;
+}
+
+.tea-form ul.errorlist {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.tea-form .errorlist li {
+    font-size: 12px !important;
+    display: block;
+    padding: 4px 5px 4px 25px;
+    margin: 0 0 3px 0;
+    border: 1px solid red;
+    color: white;
+    background: red url(/media/img/admin/icon_alert.gif) 5px .3em no-repeat;
+}
+
+.tea-form .errors {
+    background: #ffc;
+}
+
+.tea-form .errors input, .tea-form .errors select {
+    border: 1px solid red;
+}
+
+
+
+/* MODULES */
+
+.tea-form .module {
+    border: 1px solid #ccc;
+    margin-bottom: 5px;
+    background: white;
+}
+
+.tea-form .module p, .tea-form .module ul, .tea-form .module h3,
+.tea-form .module h4, .tea-form .module dl, .tea-form .module pre {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.tea-form .module blockquote {
+    margin-left: 12px;
+}
+
+.tea-form .module ul, .tea-form .module ol {
+    margin-left: 1.5em;
+}
+
+.tea-form .module h3 {
+    margin-top: .6em;
+}
+
+.tea-form .module h2, .tea-form .module caption {
+    margin: 0;
+    padding: 2px 5px 3px 5px;
+    font-size: 11px;
+    text-align: left;
+    font-weight: bold;
+    background: #7CA0C7 url(/media/img/admin/default-bg.gif) top left repeat-x;
+    color: white;
+}
+
+
+
+/* FORM ROWS */
+
+.tea-form .form-row {
+    overflow: hidden;
+    padding: 8px 12px;
+    font-size: 11px;
+    border-bottom: 1px solid #eee;
+}
+
+
+.tea-form .form-row img, .tea-form .form-row input {
+    vertical-align: middle;
+}
+
+.tea-form .form-row p {
+    padding-left: 0;
+    font-size: 11px;
+}
+
+
+
+/* ALIGNED FIELDSETS */
+
+.tea-form .aligned label {
+    display: block;
+    padding: 3px 10px 0 0;
+    float: left;
+    width: 8em;
+}
+
+.tea-form .aligned p, .tea-form .aligned ul {
+    margin-left: 7em;
+    padding-left: 30px;
+}
+
+.tea-form .aligned table p {
+    margin-left: 0;
+    padding-left: 0;
+}
+
+.tea-form .aligned p.help {
+    padding-left: 38px;
+}
+
+
+
+
+/* FORM LABELS */
+
+.tea-form h4 {
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+}
+
+.tea-form label {
+    font-weight: normal !important;
+    color: #666;
+    font-size: 12px;
+}
+
+.tea-form .required label, .tea-form label.required {
+    font-weight: bold !important;
+    color: #333 !important;
+}
+
+
+
+
+/* FORM DEFAULTS */
+
+.tea-form input, .tea-form textarea, .tea-form select {
+    margin: 2px 0;
+    padding: 2px 3px;
+    vertical-align: middle;
+    font-family: "Lucida Grande", Verdana, Arial, sans-serif;
+    font-weight: normal;
+    font-size: 11px;
+}
+
+.tea-form input:focus {
+    background-color: #EAEFFA;
+    border: 1px solid #CCC;
+}
+
+.tea-form input[type=text] {
+    min-width: 300px !important;
+}
+
+.tea-form textarea {
+    vertical-align: top !important;
+}
+
+.tea-form input[type=text], .tea-form input[type=password], .tea-form textarea, .tea-form select {
+    border: 1px solid #ccc;
+}
+
+/* FORM BUTTONS */
+
+.tea-form .button, .tea-form input[type=submit], .tea-form input[type=button],
+.tea-form .submit-row input {
+    background: white url(/media/img/admin/nav-bg.gif) bottom repeat-x;
+    padding: 3px;
+    color: black;
+    border: 1px solid #bbb;
+    border-color: #ddd #aaa #aaa #ddd;
+}
+
+.tea-form .button:active, .tea-form input[type=submit]:active, .tea-form input[type=button]:active {
+    background-image: url(/media/img/admin/nav-bg-reverse.gif);
+    background-position: top;
+}
+
+.tea-form .button.default, .tea-form input[type=submit].default, .tea-form .submit-row input.default {
+    border: 2px solid #5b80b2;
+    background: #7CA0C7 url(/media/img/admin/default-bg.gif) bottom repeat-x;
+    font-weight: bold;
+    color: white;
+    float: right;
+}
+
+.tea-form .button.default:active, .tea-form input[type=submit].default:active {
+    background-image: url(/media/img/admin/default-bg-reverse.gif);
+    background-position: top;
+}
+
+
+
+/* SUBMIT ROW */
+
+.tea-form .submit-row {
+    padding: 5px 7px;
+    text-align: right;
+    background: white url(/media/img/admin/nav-bg.gif) 0 100% repeat-x;
+    border: 1px solid #ccc;
+    margin: 5px 0;
+    overflow: hidden;
+}
+
+
+.tea-form .submit-row input {
+    margin: 0 0 0 5px;
+}
+
+.tea-form .submit-row p {
+    margin: 0.3em;
+}
+
+.tea-form .submit-row p.deletelink-box {
+    float: left;
+}
+
+.tea-form .submit-row .deletelink {
+    background: url(/media/img/admin/icon_deletelink.gif) 0 50% no-repeat;
+    padding-left: 14px;
+}

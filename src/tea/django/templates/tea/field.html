@@ -1,0 +1,13 @@
+<div class="form-row{% if field.errors %} errors{% endif %}">
+  {% if field.errors %}
+  <ul class="errorlist">
+    {% for error in field.errors %}
+    <li>{{ error }}</li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+  <div>
+    <label{% if field.field.required %} class="required"{% endif %} for="id_{{ field.name }}">{{ field.label }}</label>
+    {{ field }}
+  </div>
+</div>

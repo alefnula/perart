@@ -44,8 +44,6 @@ class PerartModel(object):
         return reverse('perart.admin.%s.delete' % self.name().lower(), args=[self.id])
 
 
-
-
 class PerartModelWithTitleAndUrl(PerartModel):
     def __unicode__(self):
         return self.title    
@@ -84,7 +82,6 @@ class PerartModelWithTitleAndUrl(PerartModel):
     def delete(self):
         memcache.delete('%s-%s' % (self.__class__.name(), self.url)) #@UndefinedVariable
         super(PerartModelWithTitleAndUrl, self).delete()
-
 
 
 class Program(PerartModelWithTitleAndUrl, models.Model):
@@ -150,7 +147,6 @@ class Program(PerartModelWithTitleAndUrl, models.Model):
         return Gallery.objects.filter(program=self)
 
 
-
 class Gallery(PerartModelWithTitleAndUrl, models.Model):
     FIELD_LIST    = [
         {'name': 'title',   'width': 350},
@@ -170,7 +166,6 @@ class Gallery(PerartModelWithTitleAndUrl, models.Model):
     def save(self, *args, **kwargs):
         PerartModelWithTitleAndUrl.save(self)
         models.Model.save(self, *args, **kwargs)
-
 
 
 class Image(PerartModel, models.Model):
@@ -199,7 +194,6 @@ class Image(PerartModel, models.Model):
         return reverse('perart.image', args=[self.id, 'thumbnail'])
 
 
-
 class Project(PerartModelWithTitleAndUrl, models.Model):
     FIELD_LIST    = [
         {'name': 'title',   'width': 350},
@@ -218,7 +212,6 @@ class Project(PerartModelWithTitleAndUrl, models.Model):
     def save(self, *args, **kwargs):
         PerartModelWithTitleAndUrl.save(self)
         models.Model.save(self, *args, **kwargs)
-
 
 
 class News(PerartModelWithTitleAndUrl, models.Model):
@@ -252,7 +245,6 @@ class MenuParseError(Exception):
     def __repr__(self):
         return u'%s! Line No: %s, Line: %s' % (self.error, self.line_no, self.line)
     __unicode__ = __str__ = __repr__
-
 
 
 class Menu(object):
@@ -344,8 +336,6 @@ class Menu(object):
             s += '' if first else '</ul>' 
         return s
 
-    
-
 
 class Settings(models.Model):
     MAIN_MENU = 'main-menu'
@@ -377,28 +367,3 @@ class Settings(models.Model):
     @staticmethod
     def MainPage():
         return Settings.get_object(Settings.MAIN_PAGE)
-
-#    @staticmethod
-#    def set_main_menu(value):
-#        s = Settings.get_object('main-menu')
-#        s.value = value
-#        s.save()
-#        memcache.delete('settings-main-menu') #@UndefinedVariable
-
-#    @staticmethod
-#    def get_main_menu():
-#        menu = memcache.get('settings-main-menu') #@UndefinedVariable
-#        if menu is None:
-#            s = Settings.get_object()
-#            menu = Menu.create(s.value, {})
-#            memcache.set('settings-main-menu', menu) #@UndefinedVariable
-#        return menu
-    
-
-#    @staticmethod
-#    def get_main_page():
-#        page = memcache.get('settings-main-page')
-#        if page is None:
-#            page = Settings.get_main_page_object()
-#            memcache.set('settings-main-page', page)
-#        return page

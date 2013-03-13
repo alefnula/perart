@@ -1,0 +1,32 @@
+{% load i18n tea %}
+<div class="tea-form">
+  {% for field in form %}
+    {% if field.is_hidden %}{{ field }}{% endif %}
+  {% endfor %}
+  {% if form.errors %}
+  <p class="errornote">{% trans "Please correct the errors below." %}</p>
+  {% endif %}
+  {% if form.fieldsets %}
+    {% for section in form.fieldsets %}
+    <fieldset class="module aligned">
+      {% if section.0 %}<h2>{{ section.0 }}</h2>{% endif %}
+      {% for field_name in section.1.fields %}
+        {% with form|attr:field_name as field %}
+          {% tea_field field %}
+        {% endwith %}
+      {% endfor %}
+    </fieldset>
+    {% endfor %}
+  {% else %}
+  <fieldset class="module aligned">
+    {% for field in form %}
+      {% if not field.is_hidden %}{% tea_field field %}{% endif %}
+    {% endfor %}
+  </fieldset>
+  {% endif %}
+  {% if submit_value %}
+  <div class="submit-row">
+    <input class="default" type="submit" value="{{ submit_value }}"/>
+  </div>
+  {% endif %}
+</div>
