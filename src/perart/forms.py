@@ -11,25 +11,36 @@ from google.appengine.api import mail
 # perart imports
 from perart import models
 
-class ProgramForm(forms.ModelForm):
+class PerArtForm(forms.ModelForm):
+    tinymce = True
+
+class ProgramForm(PerArtForm):
     class Meta:
         model = models.Program
         exclude = ['url', 'menu']
 
 
-class ProjectForm(forms.ModelForm):
+class ProjectForm(PerArtForm):
     class Meta:
         model = models.Project
         exclude = ['url']
 
 
-class NewsForm(forms.ModelForm):
+class NewsForm(PerArtForm):
     class Meta:
         model = models.News
         exclude = ['url']
 
 
-class GalleryForm(forms.ModelForm):
+class MenuForm(PerArtForm):
+    tinymce = False
+
+    class Meta:
+        model = models.Menu
+        exclude = ['url']
+
+
+class GalleryForm(PerArtForm):
     class Meta:
         model = models.Gallery
         exclude = ['url']

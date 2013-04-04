@@ -9,7 +9,7 @@ from django.views.generic import simple
 from tea.gae.decorators import admin_required
 
 from perart import forms
-from perart.models import Program, Project, News, Gallery
+from perart.models import Program, Project, News, Menu, Gallery
 
 urlpatterns = patterns('perart.views',
     # Admin interface
@@ -19,6 +19,7 @@ urlpatterns = patterns('perart.views',
     url(r'^projects/$', 'admin.object_list', {'queryset': Project.objects.all}, name='perart.admin.project.list'),
     url(r'^news/$',     'admin.object_list', {'queryset': News.objects.all},    name='perart.admin.news.list'),
     url(r'^gallery/$',  'admin.object_list', {'queryset': Gallery.objects.all}, name='perart.admin.gallery.list'),
+    url(r'^menu/$',     'admin.object_list', {'queryset': Menu.objects.all},    name='perart.admin.menu.list'),
     
     # Edit views
     url(r'^program-edit/(?:(?P<id>\d+)/)?$', 'admin.object_edit',
@@ -30,12 +31,16 @@ urlpatterns = patterns('perart.views',
     url(r'^news-edit/(?:(?P<id>\d+)/)?$',    'admin.object_edit',
             {'model': News,    'form': forms.NewsForm,     'extra_content': {'page': 'news'}},
             name='perart.admin.news.edit'),
+    url(r'^menu-edit/(?:(?P<id>\d+)/)?$',    'admin.object_edit',
+            {'model': Menu,    'form': forms.MenuForm,     'extra_content': {'page': 'menu'}},
+            name='perart.admin.menu.edit'),
 
     # Delete views
     url(r'^program-delete/(?P<id>\d+)/$', 'admin.object_delete', {'model': Program}, name='perart.admin.program.delete'),
     url(r'^project-delete/(?P<id>\d+)/$', 'admin.object_delete', {'model': Project}, name='perart.admin.project.delete'),
     url(r'^news-delete/(?P<id>\d+)/$',    'admin.object_delete', {'model': News},    name='perart.admin.news.delete'),
     url(r'^gallery-delete/(?P<id>\d+)/$', 'admin.object_delete', {'model': Gallery}, name='perart.admin.gallery.delete'),
+    url(r'^menu-delete/(?P<id>\d+)/$',    'admin.object_delete', {'model': Menu},    name='perart.admin.menu.delete'),
 
     # Gallery
     url(r'^gallery-edit/(?:(?P<id>\d+)/)?$',    'admin.gallery.edit',         name='perart.admin.gallery.edit'),
@@ -46,7 +51,6 @@ urlpatterns = patterns('perart.views',
     url(r'^program-menu-edit/(?:(?P<key>[\w-]+)/)?$', 'admin.program_menu_edit', name='perart.admin.program.menu_edit'),
     
     # Settings
-    url(r'^settings-main-menu-edit/', 'admin.settings.main_menu_edit', name='perart.admin.settings.main_menu_edit'),
     url(r'^settings-main-page-edit/', 'admin.settings.main_page_edit', name='perart.admin.settings.main_page_edit'),
     # Media admin
     #url(r'^upload/$',       'admin.media_upload',   name='perart.admin_media_upload'),

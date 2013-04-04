@@ -121,7 +121,7 @@ class Program(PerartModelWithTitleAndUrl, models.Model):
                 data['G'][gallery.title.lower()] = gallery
             for project in self.projects:
                 data['P'][project.title.lower()] = project
-            menu = Menu.create(self.menu, data)
+            menu = MenuItem.create(self.menu, data)
             memcache.set(self.menu_cache_key(), menu) #@UndefinedVariable
         return menu
 
@@ -247,7 +247,19 @@ class MenuParseError(Exception):
     __unicode__ = __str__ = __repr__
 
 
-class Menu(object):
+class Menu(PerartModel, models.Model):
+    FIELD_LIST = [
+        {'name': 'title', 'width': 350},
+    ]
+    
+    title   = models.CharField(max_length=511)
+    text    = models.TextField(null=True, blank=True)
+    
+    def create(self):
+        return MenuItem.create(self.text, {})
+
+
+class MenuItem(object):
     MATCH_SOMETHING = re.compile('^(\-+)(.+?)<([lLgGpP]):(.+?)>$')
     MATCH_NOTHING   = re.compile('^(\-+)([^<>]+?)$')
 
@@ -262,9 +274,9 @@ class Menu(object):
             line = line.strip()
             if line == '':
                 continue
-            match = Menu.MATCH_SOMETHING.match(line)
+            match = MenuItem.MATCH_SOMETHING.match(line)
             if match is None:
-                match = Menu.MATCH_NOTHING.match(line)
+                match = MenuItem.MATCH_NOTHING.match(line)
                 if match is None:
                     raise MenuParseError(current_line, line)
                 else:
@@ -288,15 +300,15 @@ class Menu(object):
         line_no, depth, name, link_type, link = items
         link_type = link_type.upper()
         if link_type == 'L':
-            new_menu = Menu(parent=menu, name=name, link=link)
+            new_menu = MenuItem(parent=menu, name=name, link=link)
         elif link_type == 'G':
             try:
-                new_menu = Menu(parent=menu, name=name, link=data['G'][link.lower()].absolute_url())
+                new_menu = MenuItem(parent=menu, name=name, link=data['G'][link.lower()].absolute_url())
             except KeyError:
                 raise MenuParseError(line_no, link.lower(), 'Unknown Gallery')
         elif link_type == 'P':
             try:
-                new_menu = Menu(parent=menu, name=name, link=data['P'][link.lower()].absolute_url())
+                new_menu = MenuItem(parent=menu, name=name, link=data['P'][link.lower()].absolute_url())
             except KeyError:
                 raise MenuParseError(line_no, link.lower(), 'Unknown Project')
         menu.submenu.append(new_menu)
@@ -304,8 +316,8 @@ class Menu(object):
     
     @staticmethod
     def create(text, data):
-        items = Menu.__parse_menu(text)
-        root = current_menu = last_menu = Menu()
+        items = MenuItem.__parse_menu(text)
+        root = current_menu = last_menu = MenuItem()
         current_depth = 0
         for item in items:
             depth = item[1]
@@ -316,7 +328,7 @@ class Menu(object):
                 while depth < current_depth:
                     current_menu = current_menu.parent
                     current_depth -= 1
-            last_menu = Menu.__add_to_menu(current_menu, item, data)
+            last_menu = MenuItem.__add_to_menu(current_menu, item, data)
         return root
 
     def __init__(self, name=None, link=None, submenu=None, parent=None):
@@ -362,7 +374,7 @@ class Settings(models.Model):
 
     @staticmethod
     def MainMenu():
-        return Menu.create(Settings.get_object(Settings.MAIN_MENU), {})
+        return MenuItem.create(Settings.get_object(Settings.MAIN_MENU), {})
 
     @staticmethod
     def MainPage():

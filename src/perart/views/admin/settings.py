@@ -10,7 +10,7 @@ from django.shortcuts import render_to_response
 
 from tea.gae.decorators import admin_required
 
-from perart.models import Settings, Menu
+from perart.models import Settings, MenuItem
 
 
 @admin_required

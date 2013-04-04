@@ -2,6 +2,8 @@
 {% load tea %}
 
 {% block admin_content %}
+
+{% if form.tinymce %}
 <script type="text/javascript">
 <!--
 $(function() {
@@ -9,6 +11,7 @@ $(function() {
 });
 //-->
 </script>
+{% endif %}
 
 <form method="post" enctype="multipart/form-data" action="{% if object %}{{ object.get_object_edit_url }}{% else %}{{ model.get_model_edit_url }}{% endif %}">
 {% tea_form form _("Save") %}
