@@ -21,7 +21,7 @@ from perart.forms import NewsletterForm
 def index(request):
     return render_to_response('perart/cms/index.html', {
                                   'programs' : Program.objects.order_by('order'),
-                                  'menu'     : Settings.MainMenu(),
+                                  'menu'     : Menu.objects.get(title='main').create(),
                                   'text'     : Settings.MainPage(),
                                   'news'     : News.objects.all().order_by('-published')[:15]
                               }, context_instance=RequestContext(request))

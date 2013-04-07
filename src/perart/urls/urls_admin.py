@@ -47,9 +47,6 @@ urlpatterns = patterns('perart.views',
     url(r'^gallery-upload-image/(?P<id>\d+)/$', 'admin.gallery.upload_image', name='perart.admin.gallery.upload_image'),    
     url(r'^gallery-remove-image/$',             'admin.gallery.remove_image', name='perart.admin.gallery.remove_image'),
 
-    # Program
-    url(r'^program-menu-edit/(?:(?P<key>[\w-]+)/)?$', 'admin.program_menu_edit', name='perart.admin.program.menu_edit'),
-    
     # Settings
     url(r'^settings-main-page-edit/', 'admin.settings.main_page_edit', name='perart.admin.settings.main_page_edit'),
     # Media admin

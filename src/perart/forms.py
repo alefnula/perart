@@ -17,7 +17,7 @@ class PerArtForm(forms.ModelForm):
 class ProgramForm(PerArtForm):
     class Meta:
         model = models.Program
-        exclude = ['url', 'menu']
+        exclude = ['url']
 
 
 class ProjectForm(PerArtForm):

@@ -62,22 +62,3 @@ def object_delete(request, model, id):
         raise Http404('%s not found' % model.__name__)
     obj.delete()
     return HttpResponseRedirect(model.get_list_url() + '?removed=true')
-
-
-
-def program_menu_edit(request, key):
-    try:
-        program = Program.objects.get(pk=key)
-        if request.method == 'POST':
-            program.menu = request.POST.get('menu', '')
-            try:
-                program.get_menu(use_cache=False)
-            except Exception, error:
-                return render_to_response('perart/admin/program_menu_edit.html', {'program': program, 'error': error}, 
-                                          context_instance=RequestContext(request))
-            program.save()
-            return HttpResponseRedirect(Program.get_list_url())
-        return render_to_response('perart/admin/program_menu_edit.html', {'program': program}, 
-                                  context_instance=RequestContext(request))
-    except Program.DoesNotExist:
-        raise Http404('Program not found')

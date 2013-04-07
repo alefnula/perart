@@ -84,13 +84,127 @@ class PerartModelWithTitleAndUrl(PerartModel):
         super(PerartModelWithTitleAndUrl, self).delete()
 
 
+
+class MenuParseError(Exception):
+    def __init__(self, line_no, line, error='Error!'):
+        self.line_no = line_no
+        self.line = line
+        self.error = error
+    
+    def __repr__(self):
+        return u'%s! Line No: %s, Line: %s' % (self.error, self.line_no, self.line)
+    __unicode__ = __str__ = __repr__
+
+
+class Menu(PerartModel, models.Model):
+    FIELD_LIST = [
+        {'name': 'title', 'width': 350},
+    ]
+    
+    title   = models.CharField(max_length=511)
+    text    = models.TextField(null=True, blank=True)
+    
+    def create(self, data=None):
+        return MenuItem.create(self.text, data or {})
+
+    def __unicode__(self):
+        return self.title
+
+
+class MenuItem(object):
+    MATCH_SOMETHING = re.compile('^(\-+)(.+?)<([lLgGpP]):(.+?)>$')
+    MATCH_NOTHING   = re.compile('^(\-+)([^<>]+?)$')
+
+    @staticmethod
+    def __parse_menu(s):
+        lines = []
+        flines = s.splitlines()
+        current_depth = 0
+        current_line = 0
+        for line in flines:
+            current_line += 1
+            line = line.strip()
+            if line == '':
+                continue
+            match = MenuItem.MATCH_SOMETHING.match(line)
+            if match is None:
+                match = MenuItem.MATCH_NOTHING.match(line)
+                if match is None:
+                    raise MenuParseError(current_line, line)
+                else:
+                    items = map(string.strip, match.groups())
+                    items += ['L', '#']
+            else:        
+                items = map(string.strip, match.groups())
+            depth = len(items[0])
+            if len(items) != 4:
+                raise MenuParseError(current_line, line)
+            if depth > current_depth + 1:
+                raise MenuParseError(current_line, line, 'Invalid depth')
+            items = [current_line, depth] + items[1:]
+            lines.append(items)
+            current_depth = depth
+        return lines
+    
+    @staticmethod
+    def __add_to_menu(menu, items, data):
+        if menu.submenu is None: menu.submenu = []
+        line_no, depth, name, link_type, link = items
+        link_type = link_type.upper()
+        if link_type == 'L':
+            new_menu = MenuItem(parent=menu, name=name, link=link)
+        elif link_type == 'G':
+            try:
+                new_menu = MenuItem(parent=menu, name=name, link=data['G'][link.lower()].absolute_url())
+            except KeyError:
+                raise MenuParseError(line_no, link.lower(), 'Unknown Gallery')
+        elif link_type == 'P':
+            try:
+                new_menu = MenuItem(parent=menu, name=name, link=data['P'][link.lower()].absolute_url())
+            except KeyError:
+                raise MenuParseError(line_no, link.lower(), 'Unknown Project')
+        menu.submenu.append(new_menu)
+        return new_menu
+    
+    @staticmethod
+    def create(text, data):
+        items = MenuItem.__parse_menu(text)
+        root = current_menu = last_menu = MenuItem()
+        current_depth = 0
+        for item in items:
+            depth = item[1]
+            if depth > current_depth:
+                current_menu = last_menu
+                current_depth += 1
+            else:
+                while depth < current_depth:
+                    current_menu = current_menu.parent
+                    current_depth -= 1
+            last_menu = MenuItem.__add_to_menu(current_menu, item, data)
+        return root
+
+    def __init__(self, name=None, link=None, submenu=None, parent=None):
+        self.name    = name
+        self.link    = link
+        self.submenu = submenu
+        self.parent  = parent
+    
+    def spitout(self, first=True):
+        s = ''
+        if self.submenu:
+            s += '' if first else '<ul>'
+            for i, menu in enumerate(self.submenu):
+                bar = '<span class="bar"></span>' if (i != 0 and first) else ''
+                cls = ' class="first-menu"' if first else ''
+                s += '<li><a%s href="%s">%s%s</a>%s</li>' % (cls, menu.link, bar, menu.name, menu.spitout(False))
+            s += '' if first else '</ul>' 
+        return s
+
+
 class Program(PerartModelWithTitleAndUrl, models.Model):
     MENU_CACHE_KEY = 'program-menu' 
     FIELD_LIST = [
         {'name': 'title', 'width': 350},
-    ]
-    ACTION_LIST = [
-        {'name': 'Edit Menu', 'action': 'get_edit_menu_url'},
     ]
     
     title           = models.CharField(max_length=511)
@@ -99,14 +213,8 @@ class Program(PerartModelWithTitleAndUrl, models.Model):
     text            = models.TextField(default='')
     frontpage_image = BlobField(null=True, blank=True)
     page_image      = BlobField(null=True, blank=True)
-    menu            = models.TextField(default='')
+    menu            = models.ForeignKey(Menu)
     order           = models.IntegerField(default=0)
-
-
-    # Actions
-    @property
-    def get_edit_menu_url(self):
-        return reverse('perart.admin.program.menu_edit', args=[self.id])
 
     def menu_cache_key(self):
         return 'program-menu-%s' % self.url
@@ -121,7 +229,7 @@ class Program(PerartModelWithTitleAndUrl, models.Model):
                 data['G'][gallery.title.lower()] = gallery
             for project in self.projects:
                 data['P'][project.title.lower()] = project
-            menu = MenuItem.create(self.menu, data)
+            menu = self.menu.create(data)
             memcache.set(self.menu_cache_key(), menu) #@UndefinedVariable
         return menu
 
@@ -236,121 +344,7 @@ class News(PerartModelWithTitleAndUrl, models.Model):
         models.Model.save(self, *args, **kwargs)
 
 
-class MenuParseError(Exception):
-    def __init__(self, line_no, line, error='Error!'):
-        self.line_no = line_no
-        self.line = line
-        self.error = error
-    
-    def __repr__(self):
-        return u'%s! Line No: %s, Line: %s' % (self.error, self.line_no, self.line)
-    __unicode__ = __str__ = __repr__
-
-
-class Menu(PerartModel, models.Model):
-    FIELD_LIST = [
-        {'name': 'title', 'width': 350},
-    ]
-    
-    title   = models.CharField(max_length=511)
-    text    = models.TextField(null=True, blank=True)
-    
-    def create(self):
-        return MenuItem.create(self.text, {})
-
-
-class MenuItem(object):
-    MATCH_SOMETHING = re.compile('^(\-+)(.+?)<([lLgGpP]):(.+?)>$')
-    MATCH_NOTHING   = re.compile('^(\-+)([^<>]+?)$')
-
-    @staticmethod
-    def __parse_menu(s):
-        lines = []
-        flines = s.splitlines()
-        current_depth = 0
-        current_line = 0
-        for line in flines:
-            current_line += 1
-            line = line.strip()
-            if line == '':
-                continue
-            match = MenuItem.MATCH_SOMETHING.match(line)
-            if match is None:
-                match = MenuItem.MATCH_NOTHING.match(line)
-                if match is None:
-                    raise MenuParseError(current_line, line)
-                else:
-                    items = map(string.strip, match.groups())
-                    items += ['L', '#']
-            else:        
-                items = map(string.strip, match.groups())
-            depth = len(items[0])
-            if len(items) != 4:
-                raise MenuParseError(current_line, line)
-            if depth > current_depth + 1:
-                raise MenuParseError(current_line, line, 'Invalid depth')
-            items = [current_line, depth] + items[1:]
-            lines.append(items)
-            current_depth = depth
-        return lines
-    
-    @staticmethod
-    def __add_to_menu(menu, items, data):
-        if menu.submenu is None: menu.submenu = []
-        line_no, depth, name, link_type, link = items
-        link_type = link_type.upper()
-        if link_type == 'L':
-            new_menu = MenuItem(parent=menu, name=name, link=link)
-        elif link_type == 'G':
-            try:
-                new_menu = MenuItem(parent=menu, name=name, link=data['G'][link.lower()].absolute_url())
-            except KeyError:
-                raise MenuParseError(line_no, link.lower(), 'Unknown Gallery')
-        elif link_type == 'P':
-            try:
-                new_menu = MenuItem(parent=menu, name=name, link=data['P'][link.lower()].absolute_url())
-            except KeyError:
-                raise MenuParseError(line_no, link.lower(), 'Unknown Project')
-        menu.submenu.append(new_menu)
-        return new_menu
-    
-    @staticmethod
-    def create(text, data):
-        items = MenuItem.__parse_menu(text)
-        root = current_menu = last_menu = MenuItem()
-        current_depth = 0
-        for item in items:
-            depth = item[1]
-            if depth > current_depth:
-                current_menu = last_menu
-                current_depth += 1
-            else:
-                while depth < current_depth:
-                    current_menu = current_menu.parent
-                    current_depth -= 1
-            last_menu = MenuItem.__add_to_menu(current_menu, item, data)
-        return root
-
-    def __init__(self, name=None, link=None, submenu=None, parent=None):
-        self.name    = name
-        self.link    = link
-        self.submenu = submenu
-        self.parent  = parent
-    
-    def spitout(self, first=True):
-        s = ''
-        if self.submenu:
-            s += '' if first else '<ul>'
-            for i, menu in enumerate(self.submenu):
-                bar = '<span class="bar"></span>' if (i != 0 and first) else ''
-                cls = ' class="first-menu"' if first else ''
-                s += '<li><a%s href="%s">%s%s</a>%s</li>' % (cls, menu.link, bar, menu.name, menu.spitout(False))
-            s += '' if first else '</ul>' 
-        return s
-
-
 class Settings(models.Model):
-    MAIN_MENU = 'main-menu'
     MAIN_PAGE = 'main_page'
     
     key   = models.CharField(max_length=255)
@@ -371,10 +365,6 @@ class Settings(models.Model):
         pair.value = value
         pair.save()
         memcache.delete('settings-%s' % name) #@UndefinedVariable
-
-    @staticmethod
-    def MainMenu():
-        return MenuItem.create(Settings.get_object(Settings.MAIN_MENU), {})
 
     @staticmethod
     def MainPage():
